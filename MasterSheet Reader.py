@@ -24,7 +24,7 @@ sort_substring = "s_"
 marker_styles = ['s', 'o', 'o','x', '+', 'v', '^', '<', '>', '.', 'd']
 
 # A bool that determines if the plot should contain a trend line **Simple Linear regression only at the moment. 
-AddTrendLine = False
+AddTrendLine = True
 #########################
 
 # Get the list of all open Windows, so it can be destroyed by the end of the script run 
@@ -246,17 +246,12 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     plt.figure(figsize=[18,14])
     for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
         plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=12, label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
-    plt.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small")
-    plt.xlabel(xplot, fontsize=18)
-    plt.ylabel(yplot, fontsize=18)
     
     if CustomTitle  != "":
         plt.title(CustomTitle, fontsize=20)
     else:
         plt.title("{} as a function of {}".format(yplot, xplot), fontsize=20)
-        
 
-        
     #Add trendLine,Should convert this to be an opptional effect that works with a button press
     if AddTrendLine: 
         # get the xplot values that dont have null values (cant be understood for polyfit)
@@ -268,8 +263,15 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
         # Get coefficients for linear regression model
         pfit2D_plot = np.poly1d(pfit2D)
         # Plot trendline based on made linear regression
-        plt.plot(xplot_trendline, pfit2D_plot(xplot_trendline), "r--")
-
+        plt.plot(xplot_trendline, pfit2D_plot(xplot_trendline), "r--", label="BestFit (Linear)")
+        
+    ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
+    if len(GetLabels(data[GetActualLabel(sorting, sort_substring)])) > 5: #5 is Arbritrary, any better approach??
+        plt.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small", title = "{}".format(sorting))
+    else:
+        plt.legend(loc="best", fontsize="large", title="{}".format(sorting))
+    plt.xlabel(xplot, fontsize=18)
+    plt.ylabel(yplot, fontsize=18)
 
 
     plt.show()    
@@ -282,15 +284,21 @@ def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
    ax = figure.add_subplot(111, projection="3d")
    for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
        ax.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(zplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i),  marker = marker_styles[i%len(marker_styles)] , s=12, label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
-   ax.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small")
-   ax.set_xlabel(xplot, fontsize=18)
-   ax.set_ylabel(yplot, fontsize=18)
-   ax.set_zlabel(zplot, fontsize=18)
    
    if CustomTitle  != "":
         ax.set_title(CustomTitle, fontsize=20)
    else:
         ax.set_title("{} as a function of {} and {}".format(zplot, xplot, yplot), fontsize=20)
+    
+    ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
+   if len(GetLabels(data[GetActualLabel(sorting, sort_substring)])) > 5: #5 is Arbritrary, any better approach??
+       ax.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small", title = "{}".format(sorting))
+   else:
+       ax.legend(loc="best", fontsize="large", title="{}".format(sorting))
+        
+   ax.set_xlabel(xplot, fontsize=18)
+   ax.set_ylabel(yplot, fontsize=18)
+   ax.set_zlabel(zplot, fontsize=18)
 
    plt.show()
     
