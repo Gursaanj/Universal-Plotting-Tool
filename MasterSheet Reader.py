@@ -245,7 +245,7 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
            
     plt.figure(figsize=[18,14])
     for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
-        plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=12, label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
+        plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=20, label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
     
     if CustomTitle  != "":
         plt.title(CustomTitle, fontsize=20)
@@ -270,6 +270,8 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
         plt.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small", title = "{}".format(sorting))
     else:
         plt.legend(loc="best", fontsize="large", title="{}".format(sorting))
+    
+    
     plt.xlabel(xplot, fontsize=18)
     plt.ylabel(yplot, fontsize=18)
 
