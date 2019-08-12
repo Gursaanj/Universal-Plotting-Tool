@@ -72,6 +72,9 @@ def GetActualLabel(truncated_label, sub_string):
     return y
 
 
+#Create list to hold Additional Data if need be
+AddData = []
+
 ###############################################################################
 ## Choose the CSV file wanted 
 def getCSV():
