@@ -37,6 +37,9 @@ root.title("CBDV Data analysis tool")
 StartCanvas = tk.Canvas(root, width = 300, height = 300, bg = 'lightsteelblue2', relief = 'raised')
 StartCanvas.pack()
 
+#Set Logo icon
+root.iconbitmap(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.ico")
+
 ListOfWindows.append(root)
 
 ### Creating a box of global Functions that can be used by any window
