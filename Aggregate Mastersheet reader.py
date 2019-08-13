@@ -23,6 +23,9 @@ sort_substring = "s_"
 # A list of marker styles to be used for scatter plotting - To make Better
 marker_styles = ['s', 'o', 'o','x', '+', 'v', '^', '<', '>', '.', 'd']
 
+# A list of colour styles to be used for scatter plotting - get best styling over time
+color_styles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "darkorange", "royalblue", "maroon", "limegreen", "violet", "orange", "slateblue", "tomato", "lime", "palevioletred", "gold"]
+
 # A bool that determines if the plot should contain a trend line **Simple Linear regression only at the moment. 
 AddTrendLine = True
 #########################
@@ -263,14 +266,14 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
            
     plt.figure(figsize=[18,14])
     for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
-        plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=20, label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
+        plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=20, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
     
     #Plot Additional Data as well
     for j in range(len(AddData)):
         if j == 0:
-            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='gray', s=20, label = "Additional Data")
+            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='lightgray', s=20, label = "Additional Data")
         else:
-            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='gray', s=20, label = None)
+            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='lightgray', s=20, label = None)
     
     if CustomTitle  != "":
         plt.title(CustomTitle, fontsize=20)
