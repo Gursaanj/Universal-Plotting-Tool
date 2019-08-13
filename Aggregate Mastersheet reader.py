@@ -84,7 +84,19 @@ def getCSV():
     global data
     data = pd.read_csv (import_file_path, engine="python", skiprows=2)
     
+    StartCanvas.create_window(150, 220, window=AdditionalData_CSV)
+    
     ChoosePlotType()
+
+## Store Additional datasets if needed
+def AdditionalData():
+    import_file_path = filedialog.askopenfilename()
+    
+    data = pd.read_csv(import_file_path, engine="python", skiprows=2)
+    
+    AddData.append(data)
+    
+    print(len(AddData))
     
 ## Decide whether or not to plot in 3d or 2d
 def ChoosePlotType():
@@ -253,6 +265,13 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
         plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=20, label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
     
+    #Plot Additional Data as well
+    for j in range(len(AddData)):
+        if j == 0:
+            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='gray', s=20, label = "Additional Data")
+        else:
+            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='gray', s=20, label = None)
+    
     if CustomTitle  != "":
         plt.title(CustomTitle, fontsize=20)
     else:
@@ -320,10 +339,11 @@ def DestroyWindows():
         ListOfWindows[i].destroy()
     
 
-## Mai button to import CSV
+## Main buttons to import CSV
 browseButton_CSV = tk.Button(text="      Import CSV File     ", command=getCSV, bg='green', fg='white', font=('verdana', 12, 'bold'))
-StartCanvas.create_window(150, 150, window=browseButton_CSV)
+AdditionalData_CSV = tk.Button(text=" Add Additional Datasets ", command=AdditionalData, bg="green", fg="white", font = ("verdana", 12, "bold"))
 
+StartCanvas.create_window(150, 150, window=browseButton_CSV)
 
 
 root.mainloop()
