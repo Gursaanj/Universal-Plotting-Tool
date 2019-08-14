@@ -5,12 +5,6 @@ from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
-
-#To get specific Rows
-####print(df.iloc[[2]])
-#To get speicific columns
-####print(df.iloc[:,0])
-
 #########################
 ## List of constant variables to be called 
 
