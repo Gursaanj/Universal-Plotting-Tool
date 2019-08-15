@@ -1,6 +1,8 @@
 #Import Necessary Packages
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from PIL import Image
 from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import tkinter as tk
@@ -22,7 +24,12 @@ color_styles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "da
 
 # A bool that determines if the plot should contain a trend line **Simple Linear regression only at the moment. 
 AddTrendLine = True
-#########################
+
+
+# WaterMark Image for the plot backgrounds
+watermark = Image.open(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.png")
+# Set Alpha for watermark image
+##############################################################################
 
 # Get the list of all open Windows, so it can be destroyed by the end of the script run 
 ListOfWindows = []
@@ -67,6 +74,16 @@ def GetUsuableColumns(array, substring):
 def GetActualLabel(truncated_label, sub_string):
     y = sub_string + truncated_label
     return y
+
+# Find the extent of an image based on the x and y axis (start 20% || End 80%)
+def SetImageScale(xlimits, ylimits):
+    start_x = 0.2*(xlimits[1]-xlimits[0])
+    end_x = 0.8*(xlimits[1]-xlimits[0])
+    start_y = 0.2*(ylimits[1]-ylimits[0])
+    end_y = 0.8*(ylimits[1]-ylimits[0])
+    extent = [start_x, end_x, start_y, end_y]
+    return extent
+    
 
 
 #Create list to hold Additional Data if need be
@@ -258,7 +275,8 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
 ## Creates 2d plots with the give specs   
 def MakePlots2D(xplot, yplot, sorting, CustomTitle):
            
-    plt.figure(figsize=[18,14])
+    plt.figure(figsize=[15,14])
+    
     for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
         plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=20, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
     
@@ -273,7 +291,7 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
         plt.title(CustomTitle, fontsize=20)
     else:
         plt.title("{} as a function of {}".format(yplot, xplot), fontsize=20)
-
+    
     #Add trendLine,Should convert this to be an opptional effect that works with a button press
     if AddTrendLine: 
         # get the xplot values that dont have null values (cant be understood for polyfit)
@@ -294,11 +312,23 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
         plt.legend(loc="best", fontsize="large", title="{}".format(sorting))
     
     
+    plt.xlim(plt.gca().get_xlim()[0], plt.gca().get_xlim()[1])
+    plt.ylim(plt.gca().get_ylim()[0], plt.gca().get_ylim()[1])
+    
     plt.xlabel(xplot, fontsize=18)
     plt.ylabel(yplot, fontsize=18)
-
+    
+    
+    #The Watermark will always start 20% above xaxis and left to the yaxis and
+    # will always end 80% above the xaxis and left to the yaxis
+    watermark_extent = SetImageScale(plt.gca().get_xlim(), plt.gca().get_ylim())
+    
+    plt.imshow(np.flipud(watermark), aspect = "auto", extent = watermark_extent, Interpolation="Bicubic", origin = "lower", alpha = 0.05)
+    
 
     plt.show()    
+    
+    
     DestroyWindows()
     
 ## Makes 3D plots with given specs 
@@ -344,9 +374,3 @@ StartCanvas.create_window(150, 150, window=browseButton_CSV)
 
 
 root.mainloop()
-
-
-####### Tool that might be used - Destroy Current Widgets
-## This is so that data would not get overiden 
-#for widget in root.winfo_children():
-#    widget.destroy()
