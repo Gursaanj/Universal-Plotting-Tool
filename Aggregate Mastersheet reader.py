@@ -25,9 +25,9 @@ color_styles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "da
 # A bool that determines if the plot should contain a trend line **Simple Linear regression only at the moment. 
 AddTrendLine = True
 
-
 # WaterMark Image for the plot backgrounds
 watermark = Image.open(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.png")
+watermark.thumbnail((512,512), Image.ANTIALIAS)
 # Set Alpha for watermark image
 ##############################################################################
 
@@ -46,7 +46,8 @@ root.iconbitmap(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV
 
 ListOfWindows.append(root)
 
-### Creating a box of global Functions that can be used by any window
+##############################################################################
+# A List of Global functions to be used outside of the respective windows
 
 # Gets all unique titles in a column and store it in its own list
 def GetLabels(StringArray):
@@ -74,17 +75,6 @@ def GetUsuableColumns(array, substring):
 def GetActualLabel(truncated_label, sub_string):
     y = sub_string + truncated_label
     return y
-
-# Find the extent of an image based on the x and y axis (start 20% || End 80%)
-def SetImageScale(xlimits, ylimits):
-    start_x = 0.2*(xlimits[1]-xlimits[0])
-    end_x = 0.8*(xlimits[1]-xlimits[0])
-    start_y = 0.2*(ylimits[1]-ylimits[0])
-    end_y = 0.8*(ylimits[1]-ylimits[0])
-    extent = [start_x, end_x, start_y, end_y]
-    return extent
-    
-
 
 #Create list to hold Additional Data if need be
 AddData = []
@@ -274,18 +264,26 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     
 ## Creates 2d plots with the give specs   
 def MakePlots2D(xplot, yplot, sorting, CustomTitle):
-           
-    plt.figure(figsize=[15,14])
+    
+    fig = plt.figure(figsize=[20,15])
+    
+    ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
+#    plt.switch_backend('QT5Agg')
+#    mng = plt.get_current_fig_manager()
+#    mng.window.showMaximized()
+    
+    #mng.full_screen_toggle()
+       
     
     for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
-        plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=20, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
+        plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
     
     #Plot Additional Data as well
     for j in range(len(AddData)):
         if j == 0:
-            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='lightgray', s=20, label = "Additional Data")
+            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='lightgray', s=30, label = "Additional Data")
         else:
-            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='lightgray', s=20, label = None)
+            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='lightgray', s=30, label = None)
     
     if CustomTitle  != "":
         plt.title(CustomTitle, fontsize=20)
@@ -311,23 +309,26 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     else:
         plt.legend(loc="best", fontsize="large", title="{}".format(sorting))
     
-    
-    plt.xlim(plt.gca().get_xlim()[0], plt.gca().get_xlim()[1])
-    plt.ylim(plt.gca().get_ylim()[0], plt.gca().get_ylim()[1])
-    
+    # Place Labels onto the the main figure
     plt.xlabel(xplot, fontsize=18)
     plt.ylabel(yplot, fontsize=18)
     
+    #Get the assigned figure width and height in pixels
+    figure_width = int(fig.get_figwidth()*fig.dpi)
+    figure_height = int(fig.get_figheight()*fig.dpi)
     
-    #The Watermark will always start 20% above xaxis and left to the yaxis and
-    # will always end 80% above the xaxis and left to the yaxis
-    watermark_extent = SetImageScale(plt.gca().get_xlim(), plt.gca().get_ylim())
+    # Get the assigned axes width and height in pixes
+    axes_width = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).width*fig.dpi
+    axes_height = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).height*fig.dpi    
     
-    plt.imshow(np.flipud(watermark), aspect = "auto", extent = watermark_extent, Interpolation="Bicubic", origin = "lower", alpha = 0.05)
+    #The offset for the watermark, for it to be place in the centre of the plot, regardless of the plot data
+    x_offset = (axes_width/2) + ((figure_width-axes_width)/2) - watermark.size[0]/2
+    y_offset = (axes_height/3) + ((figure_height-axes_height)/3)- watermark.size[1]/2
     
-
+    #Plot the image with appropriate layering and desired alpha channel
+    plt.figimage(watermark, x_offset, y_offset, zorder=1, alpha = 0.05)
+    
     plt.show()    
-    
     
     DestroyWindows()
     
