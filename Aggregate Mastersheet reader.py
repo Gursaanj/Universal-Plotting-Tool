@@ -10,10 +10,10 @@ from tkinter import filedialog
 #########################
 ## List of constant variables to be called 
 
-# String used to distinctify which column is used for plotting
+# String used to detect which column is used for plotting
 input_substring = "m_"
 
-# String used to distinctify which column is used for sorting labels in plots
+# String used to detect which column is used for sorting labels in plots
 sort_substring = "s_"
 
 # A list of marker styles to be used for scatter plotting - To make Better
@@ -300,7 +300,7 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
         pfit2D = np.polyfit(xplot_trendline, yplot_trendline, 1)
         # Get coefficients for linear regression model
         pfit2D_plot = np.poly1d(pfit2D)
-        # Plot trendline based on made linear regression
+        # Plot trend line based on made linear regression
         plt.plot(xplot_trendline, pfit2D_plot(xplot_trendline), "r--", label="BestFit (Linear)")
         
     ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
@@ -330,7 +330,7 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     
     plt.show()    
     
-    DestroyWindows()
+    destroywindows()
     
 ## Makes 3D plots with given specs 
 def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
@@ -357,12 +357,11 @@ def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
 
    plt.show()
     
-   DestroyWindows()
+   destroywindows()
 
-
-
-## Destroy all windows attached to the run  
-def DestroyWindows():
+########################################################################################################################
+# Destroy all windows attached to the run
+def destroywindows():
     for i in range(len(ListOfWindows)):
         ListOfWindows[i].destroy()
     
