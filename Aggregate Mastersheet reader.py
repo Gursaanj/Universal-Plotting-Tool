@@ -7,7 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
-#########################
+########################################################################################################################
 ## List of constant variables to be called 
 
 # String used to detect which column is used in plotting
@@ -28,8 +28,8 @@ AddTrendLine = True
 # WaterMark Image for the plot backgrounds
 watermark = Image.open(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.png")
 watermark.thumbnail((512,512), Image.ANTIALIAS)
-# Set Alpha for watermark image
-##############################################################################
+
+########################################################################################################################
 
 # Get the list of all open Windows, so it can be destroyed by the end of the script run 
 ListOfWindows = []
@@ -46,7 +46,7 @@ root.iconbitmap(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV
 
 ListOfWindows.append(root)
 
-##############################################################################
+########################################################################################################################
 # A List of Global functions to be used outside of the respective windows
 
 # Gets all unique titles in a column and store it in its own list
@@ -79,7 +79,9 @@ def GetActualLabel(truncated_label, sub_string):
 #Create list to hold Additional Data if need be
 AddData = []
 
-###############################################################################
+########################################################################################################################
+# Starter Methods to be called before choosing plot styles
+
 ## Choose the CSV file wanted 
 def getCSV():
     import_file_path = filedialog.askopenfilename()
@@ -120,8 +122,9 @@ def ChoosePlotType():
     plot3d = tk.Button(root, text = "3D Plot", command = lambda:ChoosePlotTitles3D(PlotOptions, SortOptions))
     plot3d.pack()
 
-    
-## Allow users to choose which columns of data to use
+########################################################################################################################
+## Allow users to decide what data to plot and in what manner
+
 ## for the needed plot
 def ChoosePlotTitles2D(PlotOptions, SortOptions):
     
@@ -261,7 +264,10 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     #Make Plots with given data
     PlotButton = tk.Button(root, text="Make Plots", command= lambda: MakePlots3D(XPlots.get(), YPlots.get(), ZPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
-    
+
+########################################################################################################################
+## The Actual Plotting Methods
+
 ## Creates 2d plots with the give specs   
 def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     
@@ -359,7 +365,11 @@ def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
     
    destroywindows()
 
+
 ########################################################################################################################
+
+## To be called when the application needs to be closed and all plotting has been completed
+
 # Destroy all windows attached to the run
 def destroywindows():
     for i in range(len(ListOfWindows)):
@@ -371,6 +381,5 @@ browseButton_CSV = tk.Button(text="      Import CSV File     ", command=getCSV, 
 AdditionalData_CSV = tk.Button(text=" Add Additional Datasets ", command=AdditionalData, bg="green", fg="white", font = ("verdana", 12, "bold"))
 
 StartCanvas.create_window(150, 150, window=browseButton_CSV)
-
 
 root.mainloop()
