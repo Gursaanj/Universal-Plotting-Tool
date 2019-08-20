@@ -10,7 +10,7 @@ from tkinter import filedialog
 #########################
 ## List of constant variables to be called 
 
-# String used to detect which column is used for plotting
+# String used to detect which column is used in plotting
 input_substring = "m_"
 
 # String used to detect which column is used for sorting labels in plots
