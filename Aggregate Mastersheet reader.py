@@ -23,7 +23,7 @@ marker_styles = ['s', 'o', 'o','x', '+', 'v', '^', '<', '>', '.', 'd']
 color_styles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "darkorange", "royalblue", "maroon", "limegreen", "violet", "orange", "slateblue", "tomato", "lime", "palevioletred", "gold"]
 
 # A bool that determines if the plot should contain a trend line **Simple Linear regression only at the moment. 
-AddTrendLine = True
+AddTrendLine = False
 
 # WaterMark Image for the plot backgrounds
 watermark = Image.open(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.png")
@@ -341,11 +341,26 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
 ## Makes 3D plots with given specs 
 def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
        
-   figure = plt.figure(figsize=[30,20])
+   figure = plt.figure(figsize=[20,15])
+
+   ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
+   #    plt.switch_backend('QT5Agg')
+   #    mng = plt.get_current_fig_manager()
+   #    mng.window.showMaximized()
+
+   # mng.full_screen_toggle()
+
    ax = figure.add_subplot(111, projection="3d")
    for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
-       ax.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(zplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i),  marker = marker_styles[i%len(marker_styles)] , s=12, label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
-   
+       ax.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(zplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i),  marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
+
+       # Plot Additional Data as well
+   for j in range(len(AddData)):
+       if j == 0:
+           ax.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], AddData[j][GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label="Additional Data")
+       else:
+           plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)],AddData[j][GetActualLabel(yplot, input_substring)], AddData[j][GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label=None)
+
    if CustomTitle  != "":
         ax.set_title(CustomTitle, fontsize=20)
    else:
