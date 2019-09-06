@@ -102,8 +102,6 @@ def AdditionalData():
     
     AddData.append(data)
     
-    print(len(AddData))
-    
 ## Decide whether or not to plot in 3d or 2d
 def ChoosePlotType():
     
@@ -222,48 +220,92 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
      #Reset current window for new inputs
     for widget in root.winfo_children():
         widget.destroy()
-    
+
+    # Reset Canvas
+    PlotChoices3DCanvas = tk.Canvas(root, width=450, height=300, bg='lightsteelblue2', relief='raised')
+    PlotChoices3DCanvas.pack()
+
+    # Create a list of widgets so that it can be used to on canvas windows
+    Window3D = []
+
     root.title("Plot Choices")
-    
+
+    # Create Label for Xaxis plot options
+    XPlotLabel = tk.Label(root, text="X axis Plot", width=10)
+    XPlotLabel.pack()
+    Window3D.append(XPlotLabel)
+
     #Create Options for Xaxis in plots - Dropdown
     XPlots = tk.StringVar(root)
     XPlots.set(PlotOptions[0])
     
     w = tk.OptionMenu(root, XPlots, *PlotOptions)
     w.pack()
-    
+    Window3D.append(w)
+
+    # Create Label for Yaxis plot options
+    YPlotLabel = tk.Label(root, text="Y axis Plot", width=10)
+    YPlotLabel.pack()
+    Window3D.append(YPlotLabel)
+
     #Create Options for Yaxis in plots - Dropdown 
     YPlots = tk.StringVar(root)
     YPlots.set(PlotOptions[0])
     
     v = tk.OptionMenu(root, YPlots, *PlotOptions)
     v.pack()
-    
+    Window3D.append(v)
+
+    # Create Label for Zaxis plot options
+    ZPlotLabel = tk.Label(root, text="Z axis Plot", width=10)
+    ZPlotLabel.pack()
+    Window3D.append(ZPlotLabel)
+
     #Create Options for Zaxis in plots - Dropdown
     ZPlots = tk.StringVar(root)
     ZPlots.set(PlotOptions[0])
     
     q = tk.OptionMenu(root, ZPlots, *PlotOptions)
     q.pack()
+    Window3D.append(q)
+
+    # Create label for sorting options
+    SortByLabel = tk.Label(root, text="Sort By", width=8)
+    SortByLabel.pack()
+    Window3D.append(SortByLabel)
+
+    # Let users decide how they which to sort through the aggregate data (decide what to use to determine legend in plots)
+    SortingLabels = tk.StringVar(root)
+    SortingLabels.set(SortOptions[0])
+
+    sortList = tk.OptionMenu(root, SortingLabels, *SortOptions)
+    sortList.pack()
+    Window3D.append(sortList)
     
     # Label fo Custom Title
     CustomTitleLabel = tk.Label(root, text = "Custom Title", width = 10)
     CustomTitleLabel.pack()
+    Window3D.append(CustomTitleLabel)
     
     # Let users decide custom title, if not filled, using "Zplots as a function of Yplots and Xplots"
     CustomTitle = tk.Text(root, heigh = 1, width = 50)
     CustomTitle.pack()
-    
-    # Let users decide how they which to sort through the aggregate data (decide what to use to determine legend in plots)
-    SortingLabels = tk.StringVar(root)
-    SortingLabels.set(SortOptions[0])
-    
-    sortList = tk.OptionMenu(root, SortingLabels, *SortOptions)
-    sortList.pack()
+    Window3D.append(CustomTitle)
     
     #Make Plots with given data
     PlotButton = tk.Button(root, text="Make Plots", command= lambda: MakePlots3D(XPlots.get(), YPlots.get(), ZPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
+    Window3D.append(PlotButton)
+
+    # Create a list of x axs coordinates for all widgets in the window
+    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 225]
+
+    # Create a list of x axs coordinates for all widgets in the window
+    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 180, 180, 220, 245, 290]
+
+    # Arrange 3D Canvas
+    for i in range(len(Window3D)):
+        PlotChoices3DCanvas.create_window(Canvas3D_xcord[i], Canvas3D_ycord[i], window = Window3D[i])
 
 ########################################################################################################################
 ## The Actual Plotting Methods
@@ -323,7 +365,7 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     figure_width = int(fig.get_figwidth()*fig.dpi)
     figure_height = int(fig.get_figheight()*fig.dpi)
     
-    # Get the assigned axes width and height in pixes
+    #Get the assigned axes width and height in pixes
     axes_width = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).width*fig.dpi
     axes_height = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).height*fig.dpi    
     
@@ -379,8 +421,6 @@ def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
    plt.show()
     
    destroywindows()
-
-
 ########################################################################################################################
 
 ## To be called when the application needs to be closed and all plotting has been completed
