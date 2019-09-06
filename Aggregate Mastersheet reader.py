@@ -7,10 +7,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
-#########################
+########################################################################################################################
 ## List of constant variables to be called 
 
-# String used to detect which column is used for plotting
+# String used to detect which column is used in plotting
 input_substring = "m_"
 
 # String used to detect which column is used for sorting labels in plots
@@ -23,13 +23,13 @@ marker_styles = ['s', 'o', 'o','x', '+', 'v', '^', '<', '>', '.', 'd']
 color_styles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "darkorange", "royalblue", "maroon", "limegreen", "violet", "orange", "slateblue", "tomato", "lime", "palevioletred", "gold"]
 
 # A bool that determines if the plot should contain a trend line **Simple Linear regression only at the moment. 
-AddTrendLine = True
+AddTrendLine = False
 
 # WaterMark Image for the plot backgrounds
 watermark = Image.open(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.png")
 watermark.thumbnail((512,512), Image.ANTIALIAS)
-# Set Alpha for watermark image
-##############################################################################
+
+########################################################################################################################
 
 # Get the list of all open Windows, so it can be destroyed by the end of the script run 
 ListOfWindows = []
@@ -46,7 +46,7 @@ root.iconbitmap(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV
 
 ListOfWindows.append(root)
 
-##############################################################################
+########################################################################################################################
 # A List of Global functions to be used outside of the respective windows
 
 # Gets all unique titles in a column and store it in its own list
@@ -79,7 +79,9 @@ def GetActualLabel(truncated_label, sub_string):
 #Create list to hold Additional Data if need be
 AddData = []
 
-###############################################################################
+########################################################################################################################
+# Starter Methods to be called before choosing plot styles
+
 ## Choose the CSV file wanted 
 def getCSV():
     import_file_path = filedialog.askopenfilename()
@@ -100,8 +102,6 @@ def AdditionalData():
     
     AddData.append(data)
     
-    print(len(AddData))
-    
 ## Decide whether or not to plot in 3d or 2d
 def ChoosePlotType():
     
@@ -120,8 +120,9 @@ def ChoosePlotType():
     plot3d = tk.Button(root, text = "3D Plot", command = lambda:ChoosePlotTitles3D(PlotOptions, SortOptions))
     plot3d.pack()
 
-    
-## Allow users to choose which columns of data to use
+########################################################################################################################
+## Allow users to decide what data to plot and in what manner
+
 ## for the needed plot
 def ChoosePlotTitles2D(PlotOptions, SortOptions):
     
@@ -219,49 +220,96 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
      #Reset current window for new inputs
     for widget in root.winfo_children():
         widget.destroy()
-    
+
+    # Reset Canvas
+    PlotChoices3DCanvas = tk.Canvas(root, width=450, height=300, bg='lightsteelblue2', relief='raised')
+    PlotChoices3DCanvas.pack()
+
+    # Create a list of widgets so that it can be used to on canvas windows
+    Window3D = []
+
     root.title("Plot Choices")
-    
+
+    # Create Label for Xaxis plot options
+    XPlotLabel = tk.Label(root, text="X axis Plot", width=10)
+    XPlotLabel.pack()
+    Window3D.append(XPlotLabel)
+
     #Create Options for Xaxis in plots - Dropdown
     XPlots = tk.StringVar(root)
     XPlots.set(PlotOptions[0])
     
     w = tk.OptionMenu(root, XPlots, *PlotOptions)
     w.pack()
-    
+    Window3D.append(w)
+
+    # Create Label for Yaxis plot options
+    YPlotLabel = tk.Label(root, text="Y axis Plot", width=10)
+    YPlotLabel.pack()
+    Window3D.append(YPlotLabel)
+
     #Create Options for Yaxis in plots - Dropdown 
     YPlots = tk.StringVar(root)
     YPlots.set(PlotOptions[0])
     
     v = tk.OptionMenu(root, YPlots, *PlotOptions)
     v.pack()
-    
+    Window3D.append(v)
+
+    # Create Label for Zaxis plot options
+    ZPlotLabel = tk.Label(root, text="Z axis Plot", width=10)
+    ZPlotLabel.pack()
+    Window3D.append(ZPlotLabel)
+
     #Create Options for Zaxis in plots - Dropdown
     ZPlots = tk.StringVar(root)
     ZPlots.set(PlotOptions[0])
     
     q = tk.OptionMenu(root, ZPlots, *PlotOptions)
     q.pack()
+    Window3D.append(q)
+
+    # Create label for sorting options
+    SortByLabel = tk.Label(root, text="Sort By", width=8)
+    SortByLabel.pack()
+    Window3D.append(SortByLabel)
+
+    # Let users decide how they which to sort through the aggregate data (decide what to use to determine legend in plots)
+    SortingLabels = tk.StringVar(root)
+    SortingLabels.set(SortOptions[0])
+
+    sortList = tk.OptionMenu(root, SortingLabels, *SortOptions)
+    sortList.pack()
+    Window3D.append(sortList)
     
     # Label fo Custom Title
     CustomTitleLabel = tk.Label(root, text = "Custom Title", width = 10)
     CustomTitleLabel.pack()
+    Window3D.append(CustomTitleLabel)
     
     # Let users decide custom title, if not filled, using "Zplots as a function of Yplots and Xplots"
     CustomTitle = tk.Text(root, heigh = 1, width = 50)
     CustomTitle.pack()
-    
-    # Let users decide how they which to sort through the aggregate data (decide what to use to determine legend in plots)
-    SortingLabels = tk.StringVar(root)
-    SortingLabels.set(SortOptions[0])
-    
-    sortList = tk.OptionMenu(root, SortingLabels, *SortOptions)
-    sortList.pack()
+    Window3D.append(CustomTitle)
     
     #Make Plots with given data
     PlotButton = tk.Button(root, text="Make Plots", command= lambda: MakePlots3D(XPlots.get(), YPlots.get(), ZPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
-    
+    Window3D.append(PlotButton)
+
+    # Create a list of x axs coordinates for all widgets in the window
+    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 225]
+
+    # Create a list of x axs coordinates for all widgets in the window
+    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 180, 180, 220, 245, 290]
+
+    # Arrange 3D Canvas
+    for i in range(len(Window3D)):
+        PlotChoices3DCanvas.create_window(Canvas3D_xcord[i], Canvas3D_ycord[i], window = Window3D[i])
+
+########################################################################################################################
+## The Actual Plotting Methods
+
 ## Creates 2d plots with the give specs   
 def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     
@@ -317,7 +365,7 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     figure_width = int(fig.get_figwidth()*fig.dpi)
     figure_height = int(fig.get_figheight()*fig.dpi)
     
-    # Get the assigned axes width and height in pixes
+    #Get the assigned axes width and height in pixes
     axes_width = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).width*fig.dpi
     axes_height = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).height*fig.dpi    
     
@@ -335,11 +383,26 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
 ## Makes 3D plots with given specs 
 def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
        
-   figure = plt.figure(figsize=[30,20])
+   figure = plt.figure(figsize=[20,15])
+
+   ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
+   #    plt.switch_backend('QT5Agg')
+   #    mng = plt.get_current_fig_manager()
+   #    mng.window.showMaximized()
+
+   # mng.full_screen_toggle()
+
    ax = figure.add_subplot(111, projection="3d")
    for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
-       ax.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(zplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i),  marker = marker_styles[i%len(marker_styles)] , s=12, label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
-   
+       ax.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(zplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i),  marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
+
+       # Plot Additional Data as well
+   for j in range(len(AddData)):
+       if j == 0:
+           ax.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], AddData[j][GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label="Additional Data")
+       else:
+           plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)],AddData[j][GetActualLabel(yplot, input_substring)], AddData[j][GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label=None)
+
    if CustomTitle  != "":
         ax.set_title(CustomTitle, fontsize=20)
    else:
@@ -358,8 +421,10 @@ def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
    plt.show()
     
    destroywindows()
-
 ########################################################################################################################
+
+## To be called when the application needs to be closed and all plotting has been completed
+
 # Destroy all windows attached to the run
 def destroywindows():
     for i in range(len(ListOfWindows)):
@@ -371,6 +436,5 @@ browseButton_CSV = tk.Button(text="      Import CSV File     ", command=getCSV, 
 AdditionalData_CSV = tk.Button(text=" Add Additional Datasets ", command=AdditionalData, bg="green", fg="white", font = ("verdana", 12, "bold"))
 
 StartCanvas.create_window(150, 150, window=browseButton_CSV)
-
 
 root.mainloop()
