@@ -129,7 +129,7 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     #Reset current window for new inputs
     for widget in root.winfo_children():
         widget.destroy()
-        
+
     #Reset Canvas
     PlotChoices2DCanvas = tk.Canvas(root, width = 450, height = 300, bg = 'lightsteelblue2', relief = 'raised')
     PlotChoices2DCanvas.pack()
@@ -309,6 +309,17 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
 
 ########################################################################################################################
 ## The Actual Plotting Methods
+
+## Create Window to allow for replotting
+def ConfigurationWindow():
+
+    # Reset current window for new inputs
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    # Reset Canvas
+    ConfigurationWindowCanvas = tk.Canvas(root, width=450, height=300, bg='lightsteelblue2', relief='raised')
+    ConfigurationWindowCanvas.pack()
 
 ## Creates 2d plots with the give specs   
 def MakePlots2D(xplot, yplot, sorting, CustomTitle):
