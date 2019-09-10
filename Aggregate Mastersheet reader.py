@@ -1,12 +1,13 @@
 #Import Necessary Packages
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.image as mpimg
 from PIL import Image
-from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
+
 ########################################################################################################################
 ## List of constant variables to be called 
 
@@ -321,8 +322,8 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
 #    mng.window.showMaximized()
     
     #mng.full_screen_toggle()
-       
-    
+
+
     for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
         plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
     
