@@ -7,7 +7,8 @@ from PIL import Image
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
-
+#Import Corresponding Scripts
+import GlobalFunctions as gf
 ########################################################################################################################
 ## List of constant variables to be called 
 
@@ -45,42 +46,12 @@ StartCanvas.pack()
 #Set Logo icon
 root.iconbitmap(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.ico")
 
-ListOfWindows.append(root)
-
-########################################################################################################################
-# A List of Global functions to be used outside of the respective windows
-
-# Gets all unique titles in a column and store it in its own list
-def GetLabels(StringArray):
-    LabelList = []
-    for i in range(len(StringArray)):
-        if StringArray[i] not in LabelList:
-            LabelList.append(StringArray[i])
-    return LabelList
-    
-# Get the array that corresponds with the wanted label
-def GetArrays(array1, conditionarray, WhichCondition):
-    y = array1.where(conditionarray == GetLabels(conditionarray)[WhichCondition])
-    return y
-
-# Finds Columns headers that are meant to be used for plotting and displays them for user
-def GetUsuableColumns(array, substring):
-    ListOfTitles = []
-    for i in range(len(array)):
-        if substring in array[i]:
-            Label = array[i][len(substring):]
-            ListOfTitles.append(Label)
-    return ListOfTitles
-
-# Get the column label of data from the actual columns of labelist
-def GetActualLabel(truncated_label, sub_string):
-    y = sub_string + truncated_label
-    return y
-
 #Create list to hold Additional Data if need be
 AddData = []
 
+ListOfWindows.append(root)
 ########################################################################################################################
+
 # Starter Methods to be called before choosing plot styles
 
 ## Choose the CSV file wanted 
@@ -105,14 +76,14 @@ def AdditionalData():
     
 ## Decide whether or not to plot in 3d or 2d
 def ChoosePlotType():
-    
+
     root.title("Plot Choices")
     
     # Get a list of all column labels that are deemed plottable 
-    PlotOptions = GetUsuableColumns(data.columns, input_substring)
+    PlotOptions = gf.GetUsuableColumns(data.columns, input_substring)
     
     # Get a list of all column labels used to marginalize (legend) the data
-    SortOptions = GetUsuableColumns(data.columns, sort_substring)
+    SortOptions = gf.GetUsuableColumns(data.columns, sort_substring)
     
     
     plot2d = tk.Button(root, text = "2D Plot", command = lambda: ChoosePlotTitles2D(PlotOptions, SortOptions))
@@ -324,15 +295,15 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     #mng.full_screen_toggle()
 
 
-    for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
-        plt.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
+    for i in range(len(gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)]))):
+        plt.scatter(gf.GetArrays(data[gf.GetActualLabel(xplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i), gf.GetArrays(data[gf.GetActualLabel(yplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)])[i])
     
     #Plot Additional Data as well
     for j in range(len(AddData)):
         if j == 0:
-            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='lightgray', s=30, label = "Additional Data")
+            plt.scatter(AddData[j][gf.GetActualLabel(xplot, input_substring)], AddData[j][gf.GetActualLabel(yplot, input_substring)], c='lightgray', s=30, label = "Additional Data")
         else:
-            plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], c='lightgray', s=30, label = None)
+            plt.scatter(AddData[j][gf.GetActualLabel(xplot, input_substring)], AddData[j][gf.GetActualLabel(yplot, input_substring)], c='lightgray', s=30, label = None)
     
     if CustomTitle  != "":
         plt.title(CustomTitle, fontsize=20)
@@ -342,9 +313,9 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
     #Add trendLine,Should convert this to be an opptional effect that works with a button press
     if AddTrendLine: 
         # get the xplot values that dont have null values (cant be understood for polyfit)
-        xplot_trendline = data[data[GetActualLabel(xplot, input_substring)].notnull() & data[GetActualLabel(yplot, input_substring)].notnull()][GetActualLabel(xplot, input_substring)]
+        xplot_trendline = data[data[gf.GetActualLabel(xplot, input_substring)].notnull() & data[gf.GetActualLabel(yplot, input_substring)].notnull()][gf.GetActualLabel(xplot, input_substring)]
         # get the yplot values that dont have null values (cant be understood for polyfit)
-        yplot_trendline = data[data[GetActualLabel(xplot, input_substring)].notnull() & data[GetActualLabel(yplot, input_substring)].notnull()][GetActualLabel(yplot, input_substring)]   
+        yplot_trendline = data[data[gf.GetActualLabel(xplot, input_substring)].notnull() & data[gf.GetActualLabel(yplot, input_substring)].notnull()][gf.GetActualLabel(yplot, input_substring)]
         # Create linear regression model 
         pfit2D = np.polyfit(xplot_trendline, yplot_trendline, 1)
         # Get coefficients for linear regression model
@@ -353,7 +324,7 @@ def MakePlots2D(xplot, yplot, sorting, CustomTitle):
         plt.plot(xplot_trendline, pfit2D_plot(xplot_trendline), "r--", label="BestFit (Linear)")
         
     ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
-    if len(GetLabels(data[GetActualLabel(sorting, sort_substring)])) > 5: #5 is Arbritrary, any better approach??
+    if len(gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)])) > 5: #5 is Arbritrary, any better approach??
         plt.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small", title = "{}".format(sorting))
     else:
         plt.legend(loc="best", fontsize="large", title="{}".format(sorting))
@@ -394,15 +365,15 @@ def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
    # mng.full_screen_toggle()
 
    ax = figure.add_subplot(111, projection="3d")
-   for i in range(len(GetLabels(data[GetActualLabel(sorting, sort_substring)]))):
-       ax.scatter(GetArrays(data[GetActualLabel(xplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(yplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i), GetArrays(data[GetActualLabel(zplot, input_substring)], data[GetActualLabel(sorting, sort_substring)], i),  marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = GetLabels(data[GetActualLabel(sorting, sort_substring)])[i])
+   for i in range(len(gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)]))):
+       ax.scatter(gf.GetArrays(data[gf.GetActualLabel(xplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i), gf.GetArrays(data[gf.GetActualLabel(yplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i), gf.GetArrays(data[gf.GetActualLabel(zplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i),  marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)])[i])
 
        # Plot Additional Data as well
    for j in range(len(AddData)):
        if j == 0:
-           ax.scatter(AddData[j][GetActualLabel(xplot, input_substring)], AddData[j][GetActualLabel(yplot, input_substring)], AddData[j][GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label="Additional Data")
+           ax.scatter(AddData[j][gf.GetActualLabel(xplot, input_substring)], AddData[j][gf.GetActualLabel(yplot, input_substring)], AddData[j][gf.GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label="Additional Data")
        else:
-           plt.scatter(AddData[j][GetActualLabel(xplot, input_substring)],AddData[j][GetActualLabel(yplot, input_substring)], AddData[j][GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label=None)
+           plt.scatter(AddData[j][gf.GetActualLabel(xplot, input_substring)],AddData[j][gf.GetActualLabel(yplot, input_substring)], AddData[j][gf.GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label=None)
 
    if CustomTitle  != "":
         ax.set_title(CustomTitle, fontsize=20)
@@ -410,7 +381,7 @@ def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
         ax.set_title("{} as a function of {} and {}".format(zplot, xplot, yplot), fontsize=20)
     
     ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
-   if len(GetLabels(data[GetActualLabel(sorting, sort_substring)])) > 5: #5 is Arbritrary, any better approach??
+   if len(gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)])) > 5: #5 is Arbritrary, any better approach??
        ax.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small", title = "{}".format(sorting))
    else:
        ax.legend(loc="best", fontsize="large", title="{}".format(sorting))
