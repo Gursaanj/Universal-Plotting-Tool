@@ -9,14 +9,14 @@ from PIL import Image
 #Import Corresponding Scripts
 import GlobalFunctions as gf
 
+########################################################################################################################
 # A bool that determines if the plot should contain a trend line **Simple Linear regression only at the moment.
 AddTrendLine = False
 
 # WaterMark Image for the plot backgrounds
-watermark = Image.open(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.png")
+watermark = Image.open("CBDV_logo_linear_45.png")
 watermark.thumbnail((512,512), Image.ANTIALIAS)
-
-
+########################################################################################################################
 ## Creates 2d plots with the give specs
 def MakePlots2D(data, AddData, xplot, yplot, sorting, CustomTitle):
     fig = plt.figure(figsize=[20, 15])
@@ -146,3 +146,4 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, sorting, CustomTitle):
 
     plt.show()
 
+########################################################################################################################

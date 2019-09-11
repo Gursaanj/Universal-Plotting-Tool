@@ -18,7 +18,7 @@ StartCanvas = tk.Canvas(root, width = 300, height = 300, bg = 'lightsteelblue2',
 StartCanvas.pack()
 
 #Set Logo icon
-root.iconbitmap(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.ico")
+root.iconbitmap("CBDV_logo_linear_45.ico")
 
 #Create list to hold Additional Data if need be
 AddData = []
