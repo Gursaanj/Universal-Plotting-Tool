@@ -32,7 +32,6 @@ watermark = Image.open(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Read
 watermark.thumbnail((512,512), Image.ANTIALIAS)
 
 ########################################################################################################################
-
 # Get the list of all open Windows, so it can be destroyed by the end of the script run 
 ListOfWindows = []
 

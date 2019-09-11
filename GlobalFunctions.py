@@ -1,8 +1,4 @@
-import numpy as np
-import matplotlib.pyplot as plt
-
 # This Script will be used for Global Functions in the Aggregate Master Reader
-
 # A List of Global functions to be used outside of the respective windows
 
 # Gets all unique titles in a column and store it in its own list
@@ -34,5 +30,4 @@ def GetUsuableColumns(array, substring):
 def GetActualLabel(truncated_label, sub_string):
     y = sub_string + truncated_label
     return y
-
 ########################################################################################################################
