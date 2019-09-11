@@ -145,11 +145,16 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     PlotButton.pack()
     Window2D.append(PlotButton)
 
-    # Create a list of x axs coordinates for all widgets in the window
-    Canvas2D_xcord = [50,270,50,270,50,270,225,225,225]
+    # End Plotting Process
+    EndProcessButton = tk.Button(root, text= "End Process", command = lambda: gf.destroywindows(ListOfWindows))
+    EndProcessButton.pack()
+    Window2D.append(EndProcessButton)
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas2D_ycord = [40,40,80,80,150,150, 220,245,290]
+    Canvas2D_xcord = [50,270,50,270,50,270,225,225,225,320]
+
+    # Create a list of x axs coordinates for all widgets in the window
+    Canvas2D_ycord = [40,40,80,80,150,150, 220,245,290,290]
 
     #Place everything on Canvas
     for i in range(len(Window2D)):
@@ -233,16 +238,21 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     CustomTitle.pack()
     Window3D.append(CustomTitle)
 
-    #Make Plots with given data
+    # Make Plots with given data
     PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
     Window3D.append(PlotButton)
 
-    # Create a list of x axs coordinates for all widgets in the window
-    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 225]
+    # End Plotting Process
+    EndProcessButton = tk.Button(root, text= "End Process", command = lambda: gf.destroywindows(ListOfWindows))
+    EndProcessButton.pack()
+    Window3D.append(EndProcessButton)
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 180, 180, 220, 245, 290]
+    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 225, 320]
+
+    # Create a list of x axs coordinates for all widgets in the window
+    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 180, 180, 220, 245, 290, 290]
 
     # Arrange 3D Canvas
     for i in range(len(Window3D)):
