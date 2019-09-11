@@ -122,7 +122,7 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     Window2D.append(MarkerSizeLabel)
 
     # Let users decide the size of the markers used in plotting
-    MarkerSizes = tk.StringVar(root)
+    MarkerSizes = tk.IntVar(root)
     MarkerSizes.set(gf.marker_sizes[0])
 
     MarkerSizeList = tk.OptionMenu(root, MarkerSizes, *gf.marker_sizes)
@@ -153,7 +153,7 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     Window2D.append(CustomTitle)
 
     #Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots2D(data, AddData, XPlots.get(), YPlots.get(), int(MarkerSizes.get()), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
+    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots2D(data, AddData, XPlots.get(), YPlots.get(), MarkerSizes.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
     Window2D.append(PlotButton)
 
@@ -233,7 +233,7 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     Window3D.append(MarkerSizeLabel)
 
     # Let users decide the size of the markers used in plotting
-    MarkerSizes = tk.StringVar(root)
+    MarkerSizes = tk.IntVar(root)
     MarkerSizes.set(gf.marker_sizes[0])
 
     MarkerSizeList = tk.OptionMenu(root, MarkerSizes, *gf.marker_sizes)
@@ -264,7 +264,7 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     Window3D.append(CustomTitle)
 
     # Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), int(MarkerSizes.get()), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
+    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), MarkerSizes.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
     Window3D.append(PlotButton)
 
