@@ -1,6 +1,23 @@
 # This Script will be used for Global Functions in the Aggregate Master Reader
-# A List of Global functions to be used outside of the respective windows
 
+# A List of Global variables/Functions  to be used outside of the respective windows
+
+########################################################################################################################
+## List of Global variables to be called
+
+# String used to detect which column is used in plotting
+input_substring = "m_"
+
+# String used to detect which column is used for sorting labels in plots
+sort_substring = "s_"
+
+# A list of marker styles to be used for scatter plotting - To make Better
+marker_styles = ['s', 'o', 'o','x', '+', 'v', '^', '<', '>', '.', 'd']
+
+# A list of colour styles to be used for scatter plotting - get best styling over time
+color_styles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "darkorange", "royalblue", "maroon", "limegreen", "violet", "orange", "slateblue", "tomato", "lime", "palevioletred", "gold"]
+
+########################################################################################################################
 # Gets all unique titles in a column and store it in its own list
 def GetLabels(StringArray):
     LabelList = []

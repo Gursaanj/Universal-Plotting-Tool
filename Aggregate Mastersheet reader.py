@@ -1,36 +1,11 @@
 #Import Necessary Packages
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.image as mpimg
-from PIL import Image
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
 #Import Corresponding Scripts
 import GlobalFunctions as gf
-########################################################################################################################
-## List of constant variables to be called 
-
-# String used to detect which column is used in plotting
-input_substring = "m_"
-
-# String used to detect which column is used for sorting labels in plots
-sort_substring = "s_"
-
-# A list of marker styles to be used for scatter plotting - To make Better
-marker_styles = ['s', 'o', 'o','x', '+', 'v', '^', '<', '>', '.', 'd']
-
-# A list of colour styles to be used for scatter plotting - get best styling over time
-color_styles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "darkorange", "royalblue", "maroon", "limegreen", "violet", "orange", "slateblue", "tomato", "lime", "palevioletred", "gold"]
-
-# A bool that determines if the plot should contain a trend line **Simple Linear regression only at the moment. 
-AddTrendLine = False
-
-# WaterMark Image for the plot backgrounds
-watermark = Image.open(r"C:\Users\Gursaanj\Documents\Coop\CBDV\Master Sheet Reader\CBDV_logo_linear_45.png")
-watermark.thumbnail((512,512), Image.ANTIALIAS)
-
+import PlottingSetup as ps
 ########################################################################################################################
 # Get the list of all open Windows, so it can be destroyed by the end of the script run 
 ListOfWindows = []
@@ -50,7 +25,6 @@ AddData = []
 
 ListOfWindows.append(root)
 ########################################################################################################################
-
 # Starter Methods to be called before choosing plot styles
 
 ## Choose the CSV file wanted 
@@ -79,10 +53,10 @@ def ChoosePlotType():
     root.title("Plot Choices")
     
     # Get a list of all column labels that are deemed plottable 
-    PlotOptions = gf.GetUsuableColumns(data.columns, input_substring)
+    PlotOptions = gf.GetUsuableColumns(data.columns, gf.input_substring)
     
     # Get a list of all column labels used to marginalize (legend) the data
-    SortOptions = gf.GetUsuableColumns(data.columns, sort_substring)
+    SortOptions = gf.GetUsuableColumns(data.columns, gf.sort_substring)
     
     
     plot2d = tk.Button(root, text = "2D Plot", command = lambda: ChoosePlotTitles2D(PlotOptions, SortOptions))
@@ -90,7 +64,6 @@ def ChoosePlotType():
     
     plot3d = tk.Button(root, text = "3D Plot", command = lambda:ChoosePlotTitles3D(PlotOptions, SortOptions))
     plot3d.pack()
-
 ########################################################################################################################
 ## Allow users to decide what data to plot and in what manner
 
@@ -161,7 +134,7 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     Window2D.append(CustomTitle)
     
     #Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: MakePlots2D(XPlots.get(), YPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
+    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots2D(data, AddData, XPlots.get(), YPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
     Window2D.append(PlotButton)
     
@@ -172,16 +145,6 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     Canvas2D_ycord = [40,40,80,80,150,150, 220,245,290]
     
     #Place everything on Canvas
-#    PlotChoices2DCanvas.create_window(50, 40, window=XPlotLabel)
-#    PlotChoices2DCanvas.create_window(270,40, window=w)
-#    PlotChoices2DCanvas.create_window(50, 80, window=YPlotLabel)
-#    PlotChoices2DCanvas.create_window(270, 80, window=v)
-#    PlotChoices2DCanvas.create_window(50, 150, window = SortByLabel)
-#    PlotChoices2DCanvas.create_window(270, 150, window = sortList)
-#    PlotChoices2DCanvas.create_window(225,220,window=CustomTitleLabel)
-#    PlotChoices2DCanvas.create_window(225, 260, window = CustomTitle)
-#    PlotChoices2DCanvas.create_window(225, 290, window = PlotButton)
-    
     for i in range(len(Window2D)):
         PlotChoices2DCanvas.create_window(Canvas2D_xcord[i], Canvas2D_ycord[i], window = Window2D[i])
     
@@ -264,7 +227,7 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     Window3D.append(CustomTitle)
     
     #Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: MakePlots3D(XPlots.get(), YPlots.get(), ZPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
+    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
     Window3D.append(PlotButton)
 
@@ -277,123 +240,7 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     # Arrange 3D Canvas
     for i in range(len(Window3D)):
         PlotChoices3DCanvas.create_window(Canvas3D_xcord[i], Canvas3D_ycord[i], window = Window3D[i])
-
 ########################################################################################################################
-## The Actual Plotting Methods
-
-## Creates 2d plots with the give specs   
-def MakePlots2D(xplot, yplot, sorting, CustomTitle):
-    
-    fig = plt.figure(figsize=[20,15])
-    
-    ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
-#    plt.switch_backend('QT5Agg')
-#    mng = plt.get_current_fig_manager()
-#    mng.window.showMaximized()
-    
-    #mng.full_screen_toggle()
-
-
-    for i in range(len(gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)]))):
-        plt.scatter(gf.GetArrays(data[gf.GetActualLabel(xplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i), gf.GetArrays(data[gf.GetActualLabel(yplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i), marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)])[i])
-    
-    #Plot Additional Data as well
-    for j in range(len(AddData)):
-        if j == 0:
-            plt.scatter(AddData[j][gf.GetActualLabel(xplot, input_substring)], AddData[j][gf.GetActualLabel(yplot, input_substring)], c='lightgray', s=30, label = "Additional Data")
-        else:
-            plt.scatter(AddData[j][gf.GetActualLabel(xplot, input_substring)], AddData[j][gf.GetActualLabel(yplot, input_substring)], c='lightgray', s=30, label = None)
-    
-    if CustomTitle  != "":
-        plt.title(CustomTitle, fontsize=20)
-    else:
-        plt.title("{} as a function of {}".format(yplot, xplot), fontsize=20)
-    
-    #Add trendLine,Should convert this to be an opptional effect that works with a button press
-    if AddTrendLine: 
-        # get the xplot values that dont have null values (cant be understood for polyfit)
-        xplot_trendline = data[data[gf.GetActualLabel(xplot, input_substring)].notnull() & data[gf.GetActualLabel(yplot, input_substring)].notnull()][gf.GetActualLabel(xplot, input_substring)]
-        # get the yplot values that dont have null values (cant be understood for polyfit)
-        yplot_trendline = data[data[gf.GetActualLabel(xplot, input_substring)].notnull() & data[gf.GetActualLabel(yplot, input_substring)].notnull()][gf.GetActualLabel(yplot, input_substring)]
-        # Create linear regression model 
-        pfit2D = np.polyfit(xplot_trendline, yplot_trendline, 1)
-        # Get coefficients for linear regression model
-        pfit2D_plot = np.poly1d(pfit2D)
-        # Plot trend line based on made linear regression
-        plt.plot(xplot_trendline, pfit2D_plot(xplot_trendline), "r--", label="BestFit (Linear)")
-        
-    ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
-    if len(gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)])) > 5: #5 is Arbritrary, any better approach??
-        plt.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small", title = "{}".format(sorting))
-    else:
-        plt.legend(loc="best", fontsize="large", title="{}".format(sorting))
-    
-    # Place Labels onto the the main figure
-    plt.xlabel(xplot, fontsize=18)
-    plt.ylabel(yplot, fontsize=18)
-    
-    #Get the assigned figure width and height in pixels
-    figure_width = int(fig.get_figwidth()*fig.dpi)
-    figure_height = int(fig.get_figheight()*fig.dpi)
-    
-    #Get the assigned axes width and height in pixes
-    axes_width = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).width*fig.dpi
-    axes_height = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).height*fig.dpi    
-    
-    #The offset for the watermark, for it to be place in the centre of the plot, regardless of the plot data
-    x_offset = (axes_width/2) + ((figure_width-axes_width)/2) - watermark.size[0]/2
-    y_offset = (axes_height/3) + ((figure_height-axes_height)/3)- watermark.size[1]/2
-    
-    #Plot the image with appropriate layering and desired alpha channel
-    plt.figimage(watermark, x_offset, y_offset, zorder=1, alpha = 0.05)
-    
-    plt.show()    
-    
-    destroywindows()
-    
-## Makes 3D plots with given specs 
-def MakePlots3D(xplot, yplot, zplot, sorting, CustomTitle):
-       
-   figure = plt.figure(figsize=[20,15])
-
-   ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
-   #    plt.switch_backend('QT5Agg')
-   #    mng = plt.get_current_fig_manager()
-   #    mng.window.showMaximized()
-
-   # mng.full_screen_toggle()
-
-   ax = figure.add_subplot(111, projection="3d")
-   for i in range(len(gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)]))):
-       ax.scatter(gf.GetArrays(data[gf.GetActualLabel(xplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i), gf.GetArrays(data[gf.GetActualLabel(yplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i), gf.GetArrays(data[gf.GetActualLabel(zplot, input_substring)], data[gf.GetActualLabel(sorting, sort_substring)], i),  marker = marker_styles[i%len(marker_styles)] , s=30, c= color_styles[i%len(color_styles)], label = gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)])[i])
-
-       # Plot Additional Data as well
-   for j in range(len(AddData)):
-       if j == 0:
-           ax.scatter(AddData[j][gf.GetActualLabel(xplot, input_substring)], AddData[j][gf.GetActualLabel(yplot, input_substring)], AddData[j][gf.GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label="Additional Data")
-       else:
-           plt.scatter(AddData[j][gf.GetActualLabel(xplot, input_substring)],AddData[j][gf.GetActualLabel(yplot, input_substring)], AddData[j][gf.GetActualLabel(zplot, input_substring)], c='lightgray', s=30, label=None)
-
-   if CustomTitle  != "":
-        ax.set_title(CustomTitle, fontsize=20)
-   else:
-        ax.set_title("{} as a function of {} and {}".format(zplot, xplot, yplot), fontsize=20)
-    
-    ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
-   if len(gf.GetLabels(data[gf.GetActualLabel(sorting, sort_substring)])) > 5: #5 is Arbritrary, any better approach??
-       ax.legend(loc="center left", bbox_to_anchor=(1,0.5), fontsize="small", title = "{}".format(sorting))
-   else:
-       ax.legend(loc="best", fontsize="large", title="{}".format(sorting))
-        
-   ax.set_xlabel(xplot, fontsize=18)
-   ax.set_ylabel(yplot, fontsize=18)
-   ax.set_zlabel(zplot, fontsize=18)
-
-   plt.show()
-    
-   destroywindows()
-########################################################################################################################
-
 ## To be called when the application needs to be closed and all plotting has been completed
 
 # Destroy all windows attached to the run
