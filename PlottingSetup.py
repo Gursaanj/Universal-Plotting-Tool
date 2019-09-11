@@ -135,7 +135,7 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, sorting, CustomTitle):
 
     ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
     if len(gf.GetLabels(
-            data[gf.GetActualLabel(sorting, gf.sort_substring)])) > 5:  # 5 is Arbritrary, any better approach??
+            data[gf.GetActualLabel(sorting, gf.sort_substring)])) > 5:  # 5 is Arbitrary, any better approach??
         ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), fontsize="small", title="{}".format(sorting))
     else:
         ax.legend(loc="best", fontsize="large", title="{}".format(sorting))

@@ -47,4 +47,10 @@ def GetUsuableColumns(array, substring):
 def GetActualLabel(truncated_label, sub_string):
     y = sub_string + truncated_label
     return y
+
+# Destroy all windows attached to the run
+def destroywindows(listOfWindows):
+    for i in range(len(listOfWindows)):
+        listOfWindows[i].destroy()
+
 ########################################################################################################################

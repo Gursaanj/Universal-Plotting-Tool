@@ -46,7 +46,13 @@ def AdditionalData():
     data = pd.read_csv(import_file_path, engine="python", skiprows=2)
     
     AddData.append(data)
-    
+
+## Main buttons to import CSV
+browseButton_CSV = tk.Button(text="      Import CSV File     ", command=getCSV, bg='green', fg='white', font=('verdana', 12, 'bold'))
+AdditionalData_CSV = tk.Button(text=" Add Additional Datasets ", command=AdditionalData, bg="green", fg="white", font = ("verdana", 12, "bold"))
+
+StartCanvas.create_window(150, 150, window=browseButton_CSV)
+
 ## Decide whether or not to plot in 3d or 2d
 def ChoosePlotType():
 
@@ -64,6 +70,7 @@ def ChoosePlotType():
     
     plot3d = tk.Button(root, text = "3D Plot", command = lambda:ChoosePlotTitles3D(PlotOptions, SortOptions))
     plot3d.pack()
+
 ########################################################################################################################
 ## Allow users to decide what data to plot and in what manner
 
@@ -241,18 +248,5 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     for i in range(len(Window3D)):
         PlotChoices3DCanvas.create_window(Canvas3D_xcord[i], Canvas3D_ycord[i], window = Window3D[i])
 ########################################################################################################################
-## To be called when the application needs to be closed and all plotting has been completed
-
-# Destroy all windows attached to the run
-def destroywindows():
-    for i in range(len(ListOfWindows)):
-        ListOfWindows[i].destroy()
-    
-
-## Main buttons to import CSV
-browseButton_CSV = tk.Button(text="      Import CSV File     ", command=getCSV, bg='green', fg='white', font=('verdana', 12, 'bold'))
-AdditionalData_CSV = tk.Button(text=" Add Additional Datasets ", command=AdditionalData, bg="green", fg="white", font = ("verdana", 12, "bold"))
-
-StartCanvas.create_window(150, 150, window=browseButton_CSV)
 
 root.mainloop()
