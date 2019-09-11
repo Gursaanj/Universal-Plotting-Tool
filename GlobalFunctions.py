@@ -14,6 +14,9 @@ sort_substring = "s_"
 # A list of marker styles to be used for scatter plotting - To make Better
 marker_styles = ['s', 'o', 'o','x', '+', 'v', '^', '<', '>', '.', 'd']
 
+# A list of possible marker sizes, for users to scale the size of the images as the please
+marker_sizes = [30,40,50,60,70,80,90,100]
+
 # A list of colour styles to be used for scatter plotting - get best styling over time
 color_styles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "darkorange", "royalblue", "maroon", "limegreen", "violet", "orange", "slateblue", "tomato", "lime", "palevioletred", "gold"]
 

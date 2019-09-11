@@ -18,7 +18,7 @@ watermark = Image.open("CBDV_logo_linear_45.png")
 watermark.thumbnail((512,512), Image.ANTIALIAS)
 ########################################################################################################################
 ## Creates 2d plots with the give specs
-def MakePlots2D(data, AddData, xplot, yplot, sorting, CustomTitle):
+def MakePlots2D(data, AddData, xplot, yplot, msize, sorting, CustomTitle):
     fig = plt.figure(figsize=[20, 15])
 
     ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
@@ -33,18 +33,18 @@ def MakePlots2D(data, AddData, xplot, yplot, sorting, CustomTitle):
                                  data[gf.GetActualLabel(sorting, gf.sort_substring)], i),
                     gf.GetArrays(data[gf.GetActualLabel(yplot, gf.input_substring)],
                                  data[gf.GetActualLabel(sorting, gf.sort_substring)], i),
-                    marker=gf.marker_styles[i % len(gf.marker_styles)], s=30, c=gf.color_styles[i % len(gf.color_styles)],
+                    marker=gf.marker_styles[i % len(gf.marker_styles)], s=msize, c=gf.color_styles[i % len(gf.color_styles)],
                     label=gf.GetLabels(data[gf.GetActualLabel(sorting, gf.sort_substring)])[i])
 
     # Plot Additional Data as well
     for j in range(len(AddData)):
         if j == 0:
             plt.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
-                        AddData[j][gf.GetActualLabel(yplot, gf.input_substring)], c='lightgray', s=30,
+                        AddData[j][gf.GetActualLabel(yplot, gf.input_substring)], c='lightgray', s=msize,
                         label="Additional Data")
         else:
             plt.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
-                        AddData[j][gf.GetActualLabel(yplot, gf.input_substring)], c='lightgray', s=30, label=None)
+                        AddData[j][gf.GetActualLabel(yplot, gf.input_substring)], c='lightgray', s=msize, label=None)
 
     if CustomTitle != "":
         plt.title(CustomTitle, fontsize=20)
@@ -95,7 +95,7 @@ def MakePlots2D(data, AddData, xplot, yplot, sorting, CustomTitle):
     plt.show()
 
 ## Makes 3D plots with given specs
-def MakePlots3D(data, AddData, xplot, yplot, zplot, sorting, CustomTitle):
+def MakePlots3D(data, AddData, xplot, yplot, zplot, msize, sorting, CustomTitle):
     figure = plt.figure(figsize=[20, 15])
 
     ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
@@ -113,7 +113,7 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, sorting, CustomTitle):
                                 data[gf.GetActualLabel(sorting, gf.sort_substring)], i),
                    gf.GetArrays(data[gf.GetActualLabel(zplot, gf.input_substring)],
                                 data[gf.GetActualLabel(sorting, gf.sort_substring)], i),
-                   marker=gf.marker_styles[i % len(gf.marker_styles)], s=30, c=gf.color_styles[i % len(gf.color_styles)],
+                   marker=gf.marker_styles[i % len(gf.marker_styles)], s=msize, c=gf.color_styles[i % len(gf.color_styles)],
                    label=gf.GetLabels(data[gf.GetActualLabel(sorting, gf.sort_substring)])[i])
 
         # Plot Additional Data as well
@@ -121,12 +121,12 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, sorting, CustomTitle):
         if j == 0:
             ax.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
                        AddData[j][gf.GetActualLabel(yplot, gf.input_substring)],
-                       AddData[j][gf.GetActualLabel(zplot, gf.input_substring)], c='lightgray', s=30,
+                       AddData[j][gf.GetActualLabel(zplot, gf.input_substring)], c='lightgray', s=msize,
                        label="Additional Data")
         else:
             plt.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
                         AddData[j][gf.GetActualLabel(yplot, gf.input_substring)],
-                        AddData[j][gf.GetActualLabel(zplot, gf.input_substring)], c='lightgray', s=30, label=None)
+                        AddData[j][gf.GetActualLabel(zplot, gf.input_substring)], c='lightgray', s=msize, label=None)
 
     if CustomTitle != "":
         ax.set_title(CustomTitle, fontsize=20)

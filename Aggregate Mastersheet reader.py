@@ -116,11 +116,23 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     v.pack()
     Window2D.append(v)
 
+    # Create label for changing Marker Size
+    MarkerSizeLabel = tk.Label(root, text = "Marker Size", width = 8)
+    MarkerSizeLabel.pack()
+    Window2D.append(MarkerSizeLabel)
+
+    # Let users decide the size of the markers used in plotting
+    MarkerSizes = tk.StringVar(root)
+    MarkerSizes.set(gf.marker_sizes[0])
+
+    MarkerSizeList = tk.OptionMenu(root, MarkerSizes, *gf.marker_sizes)
+    MarkerSizeList.pack()
+    Window2D.append(MarkerSizeList)
+
     # Create label for sorting options
     SortByLabel = tk.Label(root, text = "Sort By", width = 8)
     SortByLabel.pack()
     Window2D.append(SortByLabel)
-
 
     # Let users decide how they which to sort through the aggregate data (decide what to use to determine legend in plots)
     SortingLabels = tk.StringVar(root)
@@ -141,7 +153,7 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     Window2D.append(CustomTitle)
 
     #Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots2D(data, AddData, XPlots.get(), YPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
+    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots2D(data, AddData, XPlots.get(), YPlots.get(), int(MarkerSizes.get()), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
     Window2D.append(PlotButton)
 
@@ -151,10 +163,10 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     Window2D.append(EndProcessButton)
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas2D_xcord = [50,270,50,270,50,270,225,225,225,320]
+    Canvas2D_xcord = [50,270,50,270,50,270,50,270,225,225,225,320]
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas2D_ycord = [40,40,80,80,150,150, 220,245,290,290]
+    Canvas2D_ycord = [40,40,80,80,120,120,150,150, 220,245,290,290]
 
     #Place everything on Canvas
     for i in range(len(Window2D)):
@@ -215,6 +227,19 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     q.pack()
     Window3D.append(q)
 
+    # Create label for changing Marker Size
+    MarkerSizeLabel = tk.Label(root, text="Marker Size", width=8)
+    MarkerSizeLabel.pack()
+    Window3D.append(MarkerSizeLabel)
+
+    # Let users decide the size of the markers used in plotting
+    MarkerSizes = tk.StringVar(root)
+    MarkerSizes.set(gf.marker_sizes[0])
+
+    MarkerSizeList = tk.OptionMenu(root, MarkerSizes, *gf.marker_sizes)
+    MarkerSizeList.pack()
+    Window3D.append(MarkerSizeList)
+
     # Create label for sorting options
     SortByLabel = tk.Label(root, text="Sort By", width=8)
     SortByLabel.pack()
@@ -239,7 +264,7 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     Window3D.append(CustomTitle)
 
     # Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
+    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), int(MarkerSizes.get()), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
     PlotButton.pack()
     Window3D.append(PlotButton)
 
@@ -249,10 +274,10 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     Window3D.append(EndProcessButton)
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 225, 320]
+    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 225, 320]
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 180, 180, 220, 245, 290, 290]
+    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 160, 160, 205, 205, 235, 265, 290, 290]
 
     # Arrange 3D Canvas
     for i in range(len(Window3D)):
