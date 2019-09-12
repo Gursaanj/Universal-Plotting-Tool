@@ -74,7 +74,7 @@ def ChoosePlotType():
 ########################################################################################################################
 ## Allow users to decide what data to plot and in what manner
 
-## for the needed plot
+#Decide Specifications for plotting in 2D
 def ChoosePlotTitles2D(PlotOptions, SortOptions):
 
     #Reset current window for new inputs
@@ -152,8 +152,21 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     CustomTitle.pack()
     Window2D.append(CustomTitle)
 
-    #Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots2D(data, AddData, XPlots.get(), YPlots.get(), MarkerSizes.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
+    # Let users decide if they would like to display a legend on the plot : Automatically True
+    legendOption = tk.BooleanVar()
+    legendOption.set(True)
+    legendCheckbox = tk.Checkbutton(root, text = "Add Legend", variable = legendOption)
+    legendCheckbox.pack()
+    Window2D.append(legendCheckbox)
+
+    # Let Users decide if they would like a trendline in their plot via a CheckBox
+    trendLineOption = tk.BooleanVar()
+    trendLineCheckbox = tk.Checkbutton(root, text = "Add Trendline", variable = trendLineOption)
+    trendLineCheckbox.pack()
+    Window2D.append(trendLineCheckbox)
+
+    # Make Plots with given data
+    PlotButton = tk.Button(root, text="Make Plots", command = lambda: ps.MakePlots2D(data, AddData, XPlots.get(), YPlots.get(), MarkerSizes.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c"), legendOption.get(), trendLineOption.get()))
     PlotButton.pack()
     Window2D.append(PlotButton)
 
@@ -163,16 +176,16 @@ def ChoosePlotTitles2D(PlotOptions, SortOptions):
     Window2D.append(EndProcessButton)
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas2D_xcord = [50,270,50,270,50,270,50,270,225,225,225,320]
+    Canvas2D_xcord = [50 ,270 ,50 ,270 ,50 ,270 ,50 ,270 ,225 ,225 ,335 ,60 ,225 ,320]
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas2D_ycord = [40,40,80,80,120,120,150,150, 220,245,290,290]
+    Canvas2D_ycord = [40 ,40 ,80 ,80 ,120 ,120 ,170 ,170 ,220 ,255 ,220 ,220 ,290 ,290]
 
     #Place everything on Canvas
     for i in range(len(Window2D)):
         PlotChoices2DCanvas.create_window(Canvas2D_xcord[i], Canvas2D_ycord[i], window = Window2D[i])
 
-# Title choice for 3D plots
+#Decide Specifications for plotting in 3D
 def ChoosePlotTitles3D(PlotOptions, SortOptions):
 
      #Reset current window for new inputs
@@ -263,8 +276,15 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     CustomTitle.pack()
     Window3D.append(CustomTitle)
 
+     # Let users decide if they would like to display a legend on the plot : Automatically True
+    legendOption = tk.BooleanVar()
+    legendOption.set(True)
+    legendCheckbox = tk.Checkbutton(root, text="Add Legend", variable=legendOption)
+    legendCheckbox.pack()
+    Window3D.append(legendCheckbox)
+
     # Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), MarkerSizes.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c")))
+    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), MarkerSizes.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c"), legendOption.get()))
     PlotButton.pack()
     Window3D.append(PlotButton)
 
@@ -274,10 +294,10 @@ def ChoosePlotTitles3D(PlotOptions, SortOptions):
     Window3D.append(EndProcessButton)
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 225, 320]
+    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 335, 225, 320]
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 160, 160, 205, 205, 235, 265, 290, 290]
+    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 160, 160, 205, 205, 235, 265, 235, 290, 290]
 
     # Arrange 3D Canvas
     for i in range(len(Window3D)):
