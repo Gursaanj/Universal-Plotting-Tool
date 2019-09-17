@@ -64,13 +64,13 @@ def ChoosePlotType():
     # Get a list of all column labels used to marginalize (legend) the data
     SortOptions = gf.GetUsuableColumns(data.columns, gf.sort_substring)
 
-
+    # Direct to 2D Plot Settings Page
     plot2d = tk.Button(root, text = "2D Plot", command = lambda: ChoosePlotTitles2D(PlotOptions, SortOptions))
     plot2d.pack()
 
+    # Direct to 3D Plot Settings page
     plot3d = tk.Button(root, text = "3D Plot", command = lambda:ChoosePlotTitles3D(PlotOptions, SortOptions))
     plot3d.pack()
-
 ########################################################################################################################
 ## Allow users to decide what data to plot and in what manner
 

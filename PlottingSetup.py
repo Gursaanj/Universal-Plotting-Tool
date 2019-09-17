@@ -12,6 +12,8 @@ import GlobalFunctions as gf
 # WaterMark Image for the plot backgrounds
 watermark = Image.open("CBDV_logo_linear_45.png")
 watermark.thumbnail((512,512), Image.ANTIALIAS)
+
+
 ########################################################################################################################
 ## Creates 2d plots with the give specs
 #PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Marker Size, List of Legend Labels, Custom Title, Check for Legend, Check for Trendline
@@ -38,18 +40,11 @@ def MakePlots2D(data, AddData, xplot, yplot, msize, sorting, CustomTitle, legend
 
     # Plot Additional Data as well
     for j in range(len(AddData)):
-        if j == 0:
-            plt.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
-                        AddData[j][gf.GetActualLabel(yplot, gf.input_substring)], c='lightgray', s=msize,
-                        label="Additional Data")
-        else:
-            plt.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
-                        AddData[j][gf.GetActualLabel(yplot, gf.input_substring)], c='lightgray', s=msize, label=None)
+        plt.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
+                    AddData[j][gf.GetActualLabel(yplot, gf.input_substring)], c='lightgray', s=msize,
+                    label="Additional Data" if j == 0 else None)
 
-    if CustomTitle != "":
-        plt.title(CustomTitle, fontsize=20)
-    else:
-        plt.title("{} as a function of {}".format(yplot, xplot), fontsize=20)
+    plt.title(CustomTitle if CustomTitle != "" else "{} as a function of {}".format(yplot, xplot), fontsize = 20)
 
     # Add trendLine,Should convert this to be an opptional effect that works with a button press
     if AddTrendLine:
@@ -119,20 +114,12 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, msize, sorting, CustomTitle,
 
     # Plot Additional Data as well
     for j in range(len(AddData)):
-        if j == 0:
-            ax.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
-                       AddData[j][gf.GetActualLabel(yplot, gf.input_substring)],
-                       AddData[j][gf.GetActualLabel(zplot, gf.input_substring)], c='lightgray', s=msize,
-                       label="Additional Data")
-        else:
-            plt.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
-                        AddData[j][gf.GetActualLabel(yplot, gf.input_substring)],
-                        AddData[j][gf.GetActualLabel(zplot, gf.input_substring)], c='lightgray', s=msize, label=None)
+         ax.scatter(AddData[j][gf.GetActualLabel(xplot, gf.input_substring)],
+                    AddData[j][gf.GetActualLabel(yplot, gf.input_substring)],
+                    AddData[j][gf.GetActualLabel(zplot, gf.input_substring)], c='lightgray', s=msize,
+                    label= "Additional Data" if j == 0 else None)
 
-    if CustomTitle != "":
-        ax.set_title(CustomTitle, fontsize=20)
-    else:
-        ax.set_title("{} as a function of {} and {}".format(zplot, xplot, yplot), fontsize=20)
+    ax.set_title(CustomTitle if CustomTitle != "" else "{} as a function of {} and {}".format(zplot, xplot, yplot), fontsize = 20)
 
     ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
     if legendCheck:
