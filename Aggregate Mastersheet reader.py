@@ -8,50 +8,46 @@ import GlobalFunctions as gf
 import PlottingSetup as ps
 ########################################################################################################################
 # Get the list of all open Windows, so it can be destroyed by the end of the script run
-ListOfWindows = []
+listOfWindows = []
 
 # Create Main Window with given title and background
 root= tk.Tk()
 root.title("CBDV Data analysis tool")
 
-StartCanvas = tk.Canvas(root, width = 300, height = 300, bg = 'lightsteelblue2', relief = 'raised')
-StartCanvas.pack()
+# Create starting Canvas interface
+startCanvas = tk.Canvas(root, width = 300, height = 300, bg ='lightsteelblue2', relief ='raised')
+startCanvas.pack()
 
-#Set Logo icon
+# Set Logo icon
 root.iconbitmap("CBDV_logo_linear_45.ico")
 
-#Create list to hold Additional Data if need be
-AddData = []
+# Create list to hold Additional Data if need be
+additionalData = []
 
-ListOfWindows.append(root)
+listOfWindows.append(root)
 ########################################################################################################################
 # Starter Methods to be called before choosing plot styles
 
 ## Choose the CSV file wanted
-def getCSV():
-    import_file_path = filedialog.askopenfilename()
-
-    # Import data
-    global data
-    data = pd.read_csv (import_file_path, engine="python", skiprows=2)
-
-    StartCanvas.create_window(150, 220, window=AdditionalData_CSV)
+def GetPrimaryCSV():
+    importedFilePath = filedialog.askopenfilename()
+    global data # Make Data accessible outside of Function
+    data = pd.read_csv (importedFilePath, engine="python", skiprows=2)
+    startCanvas.create_window(150, 220, window=additionalCSVButton)
 
     ChoosePlotType()
 
 ## Store Additional datasets if needed
-def AdditionalData():
-    import_file_path = filedialog.askopenfilename()
-
-    data = pd.read_csv(import_file_path, engine="python", skiprows=2)
-
-    AddData.append(data)
+def GetAdditionalCSV():
+    importedFilePath = filedialog.askopenfilename()
+    data = pd.read_csv(importedFilePath, engine="python", skiprows=2)
+    additionalData.append(data)
 
 ## Main buttons to import CSV
-browseButton_CSV = tk.Button(text="      Import CSV File     ", command=getCSV, bg='green', fg='white', font=('verdana', 12, 'bold'))
-AdditionalData_CSV = tk.Button(text=" Add Additional Datasets ", command=AdditionalData, bg="green", fg="white", font = ("verdana", 12, "bold"))
+primaryCSVButton = tk.Button(text="      Import CSV File     ", command=GetPrimaryCSV, bg='green', fg='white', font=('verdana', 12, 'bold'))
+additionalCSVButton = tk.Button(text=" Add Additional Datasets ", command=GetAdditionalCSV, bg="green", fg="white", font = ("verdana", 12, "bold"))
 
-StartCanvas.create_window(150, 150, window=browseButton_CSV)
+startCanvas.create_window(150, 150, window=primaryCSVButton)
 
 ## Decide whether or not to plot in 3d or 2d
 def ChoosePlotType():
@@ -59,249 +55,250 @@ def ChoosePlotType():
     root.title("Plot Choices")
 
     # Get a list of all column labels that are deemed plottable
-    PlotOptions = gf.GetUsuableColumns(data.columns, gf.input_substring)
+    plotOptions = gf.GetUsuableColumns(data.columns, gf.inputSubstring)
 
     # Get a list of all column labels used to marginalize (legend) the data
-    SortOptions = gf.GetUsuableColumns(data.columns, gf.sort_substring)
+    sortOptions = gf.GetUsuableColumns(data.columns, gf.sortSubstring)
 
     # Direct to 2D Plot Settings Page
-    plot2d = tk.Button(root, text = "2D Plot", command = lambda: ChoosePlotTitles2D(PlotOptions, SortOptions))
-    plot2d.pack()
+    plotButton2D = tk.Button(root, text = "2D Plot", command = lambda: HandCraftPlot2D(plotOptions, sortOptions))
+    plotButton2D.pack()
 
     # Direct to 3D Plot Settings page
-    plot3d = tk.Button(root, text = "3D Plot", command = lambda:ChoosePlotTitles3D(PlotOptions, SortOptions))
-    plot3d.pack()
+    plotButton3D = tk.Button(root, text = "3D Plot", command = lambda:HandCraftPlo3D(plotOptions, sortOptions))
+    plotButton3D.pack()
 ########################################################################################################################
 ## Allow users to decide what data to plot and in what manner
 
 #Decide Specifications for plotting in 2D
-def ChoosePlotTitles2D(PlotOptions, SortOptions):
+def HandCraftPlot2D(plottingOptions, sortingOptions):
 
     #Reset current window for new inputs
     for widget in root.winfo_children():
         widget.destroy()
 
     #Reset Canvas
-    PlotChoices2DCanvas = tk.Canvas(root, width = 450, height = 300, bg = 'lightsteelblue2', relief = 'raised')
-    PlotChoices2DCanvas.pack()
+    plotChoices2DCanvas = tk.Canvas(root, width = 450, height = 300, bg = 'lightsteelblue2', relief = 'raised')
+    plotChoices2DCanvas.pack()
 
     #Create a list of widgets so that it can be used to on canvas windows
-    Window2D = []
+    window2D = []
 
     root.title("Plot Choices")
 
     #Create Label for Xaxis plot options
-    XPlotLabel = tk.Label(root, text = "X axis Plot", width = 10)
-    XPlotLabel.pack()
-    Window2D.append(XPlotLabel)
+    xAxisPlotLabel = tk.Label(root, text = "X axis Plot", width = 10)
+    xAxisPlotLabel.pack()
+    window2D.append(xAxisPlotLabel)
 
     #Create Options for Xaxis in plots - Dropdown
-    XPlots = tk.StringVar(root)
-    XPlots.set(PlotOptions[0])
+    xAxisPlotData = tk.StringVar(root)
+    xAxisPlotData.set(plottingOptions[0])
 
-    w = tk.OptionMenu(root, XPlots, *PlotOptions)
-    w.pack()
-    Window2D.append(w)
+    xAxisPlotDataOptions = tk.OptionMenu(root, xAxisPlotData, *plottingOptions)
+    xAxisPlotDataOptions.pack()
+    window2D.append(xAxisPlotDataOptions)
 
     # Create Label for Yaxis plot options
-    YPlotLabel = tk.Label(root, text = "Y axis Plot", width = 10)
-    YPlotLabel.pack()
-    Window2D.append(YPlotLabel)
+    yAxisPlotLabel = tk.Label(root, text = "Y axis Plot", width = 10)
+    yAxisPlotLabel.pack()
+    window2D.append(yAxisPlotLabel)
 
     # Create Options for Yaxis in plots - Dropdown
-    YPlots = tk.StringVar(root)
-    YPlots.set(PlotOptions[0])
+    yAxisPlotData = tk.StringVar(root)
+    yAxisPlotData.set(plottingOptions[0])
 
-    v = tk.OptionMenu(root, YPlots, *PlotOptions)
-    v.pack()
-    Window2D.append(v)
+    yAxisPlotDataOptions = tk.OptionMenu(root, yAxisPlotData, *plottingOptions)
+    yAxisPlotDataOptions.pack()
+    window2D.append(yAxisPlotDataOptions)
 
     # Create label for changing Marker Size
-    MarkerSizeLabel = tk.Label(root, text = "Marker Size", width = 8)
-    MarkerSizeLabel.pack()
-    Window2D.append(MarkerSizeLabel)
+    markerSizeLabel = tk.Label(root, text = "Marker Size", width = 8)
+    markerSizeLabel.pack()
+    window2D.append(markerSizeLabel)
 
     # Let users decide the size of the markers used in plotting
-    MarkerSizes = tk.IntVar(root)
-    MarkerSizes.set(gf.marker_sizes[0])
+    markerSizes = tk.IntVar(root)
+    markerSizes.set(gf.markerSizes[0])
 
-    MarkerSizeList = tk.OptionMenu(root, MarkerSizes, *gf.marker_sizes)
-    MarkerSizeList.pack()
-    Window2D.append(MarkerSizeList)
+    markerSizeOptions = tk.OptionMenu(root, markerSizes, *gf.markerSizes)
+    markerSizeOptions.pack()
+    window2D.append(markerSizeOptions)
 
     # Create label for sorting options
-    SortByLabel = tk.Label(root, text = "Sort By", width = 8)
-    SortByLabel.pack()
-    Window2D.append(SortByLabel)
+    sortByLabel = tk.Label(root, text = "Sort By", width = 8)
+    sortByLabel.pack()
+    window2D.append(sortByLabel)
 
     # Let users decide how they which to sort through the aggregate data (decide what to use to determine legend in plots)
-    SortingLabels = tk.StringVar(root)
-    SortingLabels.set(SortOptions[0])
+    sortingByLabels = tk.StringVar(root)
+    sortingByLabels.set(sortingOptions[0])
 
-    sortList = tk.OptionMenu(root, SortingLabels, *SortOptions)
-    sortList.pack()
-    Window2D.append(sortList)
+    sortingByOptions = tk.OptionMenu(root, sortingByLabels, *sortingOptions)
+    sortingByOptions.pack()
+    window2D.append(sortingByOptions)
 
     # Label fo Custom Title
-    CustomTitleLabel = tk.Label(root, text = "Custom Title", width = 10)
-    CustomTitleLabel.pack()
-    Window2D.append(CustomTitleLabel)
+    customTitleLabel = tk.Label(root, text = "Custom Title", width = 10)
+    customTitleLabel.pack()
+    window2D.append(customTitleLabel)
 
     # Let users decide custom title, if not filled, using "Yplots as a function of Xplots"
-    CustomTitle = tk.Text(root, height = 1, width = 50)
-    CustomTitle.pack()
-    Window2D.append(CustomTitle)
+    customTitle = tk.Text(root, height = 1, width = 50)
+    customTitle.pack()
+    window2D.append(customTitle)
 
-    # Let users decide if they would like to display a legend on the plot : Automatically True
-    legendOption = tk.BooleanVar()
-    legendOption.set(True)
-    legendCheckbox = tk.Checkbutton(root, text = "Add Legend", variable = legendOption)
-    legendCheckbox.pack()
-    Window2D.append(legendCheckbox)
+    # Let users decide if they would like to display a legend on the plot : Set by PlottingSetup.py
+    addLegendOption = tk.BooleanVar()
+    addLegendOption.set(ps.initialLegendCheck)
+    addLegendCheckbox = tk.Checkbutton(root, text = "Add Legend", variable = addLegendOption)
+    addLegendCheckbox.pack()
+    window2D.append(addLegendCheckbox)
 
     # Let Users decide if they would like a trendline in their plot via a CheckBox
-    trendLineOption = tk.BooleanVar()
-    trendLineCheckbox = tk.Checkbutton(root, text = "Add Trendline", variable = trendLineOption)
-    trendLineCheckbox.pack()
-    Window2D.append(trendLineCheckbox)
+    addTrendLineOption = tk.BooleanVar()
+    addTrendLineOption.set(ps.initialTrendLineCheck)
+    addTrendLineCheckbox = tk.Checkbutton(root, text = "Add Trendline", variable = addTrendLineOption)
+    addTrendLineCheckbox.pack()
+    window2D.append(addTrendLineCheckbox)
 
     # Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command = lambda: ps.MakePlots2D(data, AddData, XPlots.get(), YPlots.get(), MarkerSizes.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c"), legendOption.get(), trendLineOption.get()))
-    PlotButton.pack()
-    Window2D.append(PlotButton)
+    plotGraphButton = tk.Button(root, text="Make Plots", command = lambda: ps.MakePlots2D(data, additionalData, xAxisPlotData.get(), yAxisPlotData.get(), markerSizes.get(), sortingByLabels.get(), customTitle.get("1.0", "end-1c"), addLegendOption.get(), addTrendLineOption.get()))
+    plotGraphButton.pack()
+    window2D.append(plotGraphButton)
 
     # End Plotting Process
-    EndProcessButton = tk.Button(root, text= "End Process", command = lambda: gf.destroywindows(ListOfWindows))
-    EndProcessButton.pack()
-    Window2D.append(EndProcessButton)
+    quitApplicationButton = tk.Button(root, text= "End Process", command = lambda: gf.destroywindows(listOfWindows))
+    quitApplicationButton.pack()
+    window2D.append(quitApplicationButton)
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas2D_xcord = [50 ,270 ,50 ,270 ,50 ,270 ,50 ,270 ,225 ,225 ,335 ,60 ,225 ,320]
+    canvas2DXCoordinates = [50 ,270 ,50 ,270 ,50 ,270 ,50 ,270 ,225 ,225 ,335 ,60 ,225 ,320]
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas2D_ycord = [40 ,40 ,80 ,80 ,120 ,120 ,170 ,170 ,220 ,255 ,220 ,220 ,290 ,290]
+    canvas3DYCoordinates = [40 ,40 ,80 ,80 ,120 ,120 ,170 ,170 ,220 ,255 ,220 ,220 ,290 ,290]
 
     #Place everything on Canvas
-    for i in range(len(Window2D)):
-        PlotChoices2DCanvas.create_window(Canvas2D_xcord[i], Canvas2D_ycord[i], window = Window2D[i])
+    for i in range(len(window2D)):
+        plotChoices2DCanvas.create_window(canvas2DXCoordinates[i], canvas3DYCoordinates[i], window = window2D[i])
 
 #Decide Specifications for plotting in 3D
-def ChoosePlotTitles3D(PlotOptions, SortOptions):
+def HandCraftPlo3D(PlotOptions, SortOptions):
 
      #Reset current window for new inputs
     for widget in root.winfo_children():
         widget.destroy()
 
     # Reset Canvas
-    PlotChoices3DCanvas = tk.Canvas(root, width=450, height=300, bg='lightsteelblue2', relief='raised')
-    PlotChoices3DCanvas.pack()
+    plotChoices3DCanvas = tk.Canvas(root, width=450, height=300, bg='lightsteelblue2', relief='raised')
+    plotChoices3DCanvas.pack()
 
     # Create a list of widgets so that it can be used to on canvas windows
-    Window3D = []
+    window3D = []
 
     root.title("Plot Choices")
 
     # Create Label for Xaxis plot options
-    XPlotLabel = tk.Label(root, text="X axis Plot", width=10)
-    XPlotLabel.pack()
-    Window3D.append(XPlotLabel)
+    xAxisPlotLabel = tk.Label(root, text="X axis Plot", width=10)
+    xAxisPlotLabel.pack()
+    window3D.append(xAxisPlotLabel)
 
     #Create Options for Xaxis in plots - Dropdown
-    XPlots = tk.StringVar(root)
-    XPlots.set(PlotOptions[0])
+    xAxisPlotData = tk.StringVar(root)
+    xAxisPlotData.set(PlotOptions[0])
 
-    w = tk.OptionMenu(root, XPlots, *PlotOptions)
-    w.pack()
-    Window3D.append(w)
+    xAxisPlotDataOptions = tk.OptionMenu(root, xAxisPlotData, *PlotOptions)
+    xAxisPlotDataOptions.pack()
+    window3D.append(xAxisPlotDataOptions)
 
     # Create Label for Yaxis plot options
-    YPlotLabel = tk.Label(root, text="Y axis Plot", width=10)
-    YPlotLabel.pack()
-    Window3D.append(YPlotLabel)
+    yAxisPlotLabel = tk.Label(root, text="Y axis Plot", width=10)
+    yAxisPlotLabel.pack()
+    window3D.append(yAxisPlotLabel)
 
     #Create Options for Yaxis in plots - Dropdown
-    YPlots = tk.StringVar(root)
-    YPlots.set(PlotOptions[0])
+    yAxisPlotData = tk.StringVar(root)
+    yAxisPlotData.set(PlotOptions[0])
 
-    v = tk.OptionMenu(root, YPlots, *PlotOptions)
-    v.pack()
-    Window3D.append(v)
+    yAxisPlotDataOptions = tk.OptionMenu(root, yAxisPlotData, *PlotOptions)
+    yAxisPlotDataOptions.pack()
+    window3D.append(yAxisPlotDataOptions)
 
     # Create Label for Zaxis plot options
-    ZPlotLabel = tk.Label(root, text="Z axis Plot", width=10)
-    ZPlotLabel.pack()
-    Window3D.append(ZPlotLabel)
+    zAxisPlotLabel = tk.Label(root, text="Z axis Plot", width=10)
+    zAxisPlotLabel.pack()
+    window3D.append(zAxisPlotLabel)
 
     #Create Options for Zaxis in plots - Dropdown
-    ZPlots = tk.StringVar(root)
-    ZPlots.set(PlotOptions[0])
+    zAxisPlotData = tk.StringVar(root)
+    zAxisPlotData.set(PlotOptions[0])
 
-    q = tk.OptionMenu(root, ZPlots, *PlotOptions)
-    q.pack()
-    Window3D.append(q)
+    zAxisPlotDataOptions = tk.OptionMenu(root, zAxisPlotData, *PlotOptions)
+    zAxisPlotDataOptions.pack()
+    window3D.append(zAxisPlotDataOptions)
 
     # Create label for changing Marker Size
-    MarkerSizeLabel = tk.Label(root, text="Marker Size", width=8)
-    MarkerSizeLabel.pack()
-    Window3D.append(MarkerSizeLabel)
+    markerSizeLabel = tk.Label(root, text="Marker Size", width=8)
+    markerSizeLabel.pack()
+    window3D.append(markerSizeLabel)
 
     # Let users decide the size of the markers used in plotting
-    MarkerSizes = tk.IntVar(root)
-    MarkerSizes.set(gf.marker_sizes[0])
+    markerSizes = tk.IntVar(root)
+    markerSizes.set(gf.markerSizes[0])
 
-    MarkerSizeList = tk.OptionMenu(root, MarkerSizes, *gf.marker_sizes)
-    MarkerSizeList.pack()
-    Window3D.append(MarkerSizeList)
+    markerSizeOptions = tk.OptionMenu(root, markerSizes, *gf.markerSizes)
+    markerSizeOptions.pack()
+    window3D.append(markerSizeOptions)
 
     # Create label for sorting options
-    SortByLabel = tk.Label(root, text="Sort By", width=8)
-    SortByLabel.pack()
-    Window3D.append(SortByLabel)
+    sortByLabel = tk.Label(root, text="Sort By", width=8)
+    sortByLabel.pack()
+    window3D.append(sortByLabel)
 
     # Let users decide how they which to sort through the aggregate data (decide what to use to determine legend in plots)
-    SortingLabels = tk.StringVar(root)
-    SortingLabels.set(SortOptions[0])
+    sortingByLabels = tk.StringVar(root)
+    sortingByLabels.set(SortOptions[0])
 
-    sortList = tk.OptionMenu(root, SortingLabels, *SortOptions)
-    sortList.pack()
-    Window3D.append(sortList)
+    sortingByLabelOptions = tk.OptionMenu(root, sortingByLabels, *SortOptions)
+    sortingByLabelOptions.pack()
+    window3D.append(sortingByLabelOptions)
 
     # Label fo Custom Title
-    CustomTitleLabel = tk.Label(root, text = "Custom Title", width = 10)
-    CustomTitleLabel.pack()
-    Window3D.append(CustomTitleLabel)
+    customTitleLabel = tk.Label(root, text = "Custom Title", width = 10)
+    customTitleLabel.pack()
+    window3D.append(customTitleLabel)
 
     # Let users decide custom title, if not filled, using "Zplots as a function of Yplots and Xplots"
-    CustomTitle = tk.Text(root, heigh = 1, width = 50)
-    CustomTitle.pack()
-    Window3D.append(CustomTitle)
+    customTitle = tk.Text(root, heigh = 1, width = 50)
+    customTitle.pack()
+    window3D.append(customTitle)
 
-     # Let users decide if they would like to display a legend on the plot : Automatically True
-    legendOption = tk.BooleanVar()
-    legendOption.set(True)
-    legendCheckbox = tk.Checkbutton(root, text="Add Legend", variable=legendOption)
-    legendCheckbox.pack()
-    Window3D.append(legendCheckbox)
+     # Let users decide if they would like to display a legend on the plot : Set by PlottingSetup.py
+    addLegendOption = tk.BooleanVar()
+    addLegendOption.set(ps.initialLegendCheck)
+    addLegendCheckbox = tk.Checkbutton(root, text="Add Legend", variable=addLegendOption)
+    addLegendCheckbox.pack()
+    window3D.append(addLegendCheckbox)
 
     # Make Plots with given data
-    PlotButton = tk.Button(root, text="Make Plots", command= lambda: ps.MakePlots3D(data, AddData, XPlots.get(), YPlots.get(), ZPlots.get(), MarkerSizes.get(), SortingLabels.get(), CustomTitle.get("1.0", "end-1c"), legendOption.get()))
-    PlotButton.pack()
-    Window3D.append(PlotButton)
+    plotGraphButton = tk.Button(root, text="Make Plots", command = lambda: ps.MakePlots3D(data, additionalData, xAxisPlotData.get(), yAxisPlotData.get(), zAxisPlotData.get(), markerSizes.get(), sortingByLabels.get(), customTitle.get("1.0", "end-1c"), addLegendOption.get()))
+    plotGraphButton.pack()
+    window3D.append(plotGraphButton)
 
     # End Plotting Process
-    EndProcessButton = tk.Button(root, text= "End Process", command = lambda: gf.destroywindows(ListOfWindows))
-    EndProcessButton.pack()
-    Window3D.append(EndProcessButton)
+    quitApplicationButton = tk.Button(root, text= "End Process", command = lambda: gf.destroywindows(listOfWindows))
+    quitApplicationButton.pack()
+    window3D.append(quitApplicationButton)
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas3D_xcord = [50, 270, 50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 335, 225, 320]
+    canvas3DXCoordinates = [50, 270, 50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 335, 225, 320]
 
     # Create a list of x axs coordinates for all widgets in the window
-    Canvas3D_ycord = [40, 40, 80, 80, 120, 120, 160, 160, 205, 205, 235, 265, 235, 290, 290]
+    canvas3DYCoordinates = [40, 40, 80, 80, 120, 120, 160, 160, 205, 205, 235, 265, 235, 290, 290]
 
     # Arrange 3D Canvas
-    for i in range(len(Window3D)):
-        PlotChoices3DCanvas.create_window(Canvas3D_xcord[i], Canvas3D_ycord[i], window = Window3D[i])
+    for i in range(len(window3D)):
+        plotChoices3DCanvas.create_window(canvas3DXCoordinates[i], canvas3DYCoordinates[i], window = window3D[i])
 ########################################################################################################################
 
 root.mainloop()
