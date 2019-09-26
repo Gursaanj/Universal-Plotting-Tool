@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from PIL import Image
+import enum
 #Import Corresponding Scripts
 import GlobalFunctions as gf
 
@@ -18,6 +19,11 @@ watermark.thumbnail((512,512), Image.ANTIALIAS)
 initialLegendCheck = True
 initialTrendLineCheck = False
 
+# In the General plotting form, users can decide whether or not to plot 2D or 3D plots. So an Enum will be created to
+# distinguish between the two
+class PlotDimensions(enum.Enum):
+    TwoDimensions = "2D"
+    ThreeDimensions = "3D"
 
 ########################################################################################################################
 ## Creates 2d plots with the give specs
@@ -28,7 +34,6 @@ def MakePlots2D(data, AddData, xplot, yplot, msize, sorting, CustomTitle, legend
     ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
     #    plt.switch_backend('QT5Agg')
     #    mng = plt.get_current_fig_manager()
-    #    mng.window.showMaximized()
 
     # mng.full_screen_toggle()
 
@@ -137,3 +142,9 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, msize, sorting, CustomTitle,
     plt.show()
 
 ########################################################################################################################
+
+def TempFunction():
+    print("HI")
+
+# Create a Dictionary to use as a switch case where the enum (of 2d or 3d) is the key and the respective plot is the value
+dictOfAppropriatePlots = {PlotDimensions.TwoDimensions : MakePlots2D, PlotDimensions.ThreeDimensions : MakePlots3D}

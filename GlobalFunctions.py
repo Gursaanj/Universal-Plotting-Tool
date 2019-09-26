@@ -1,7 +1,4 @@
-# This Script will be used for Global Functions in the Aggregate Master Reader
-
 # A List of Global variables/Functions  to be used outside of the respective windows
-
 ########################################################################################################################
 ## List of Global variables to be called
 
