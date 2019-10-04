@@ -73,10 +73,10 @@ def ChoosePlotType():
     typeOfPlot = tk.StringVar()
 
     # Selection for 2D Plot
-    radioButton2DPlot = tk.Radiobutton(root, text = "2D Plot", value = ps.PlotDimensions.TwoDimensions, variable = typeOfPlot)
+    radioButton2DPlot = tk.Radiobutton(root, text = "2D Plot", value = ps.PlotDimensions.TwoDimensions.name, variable = typeOfPlot)
     radioButton2DPlot.pack()
     # Selection for 3D Plot
-    radioButton3DPlot = tk.Radiobutton(root, text = "3D Plot", value = ps.PlotDimensions.ThreeDimensions, variable = typeOfPlot)
+    radioButton3DPlot = tk.Radiobutton(root, text = "3D Plot", value = ps.PlotDimensions.ThreeDimensions.name, variable = typeOfPlot)
     radioButton3DPlot.pack()
 
     # A button to let Users move onto the next window and start specifying the plot details
@@ -191,14 +191,11 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     addTrendLineCheckbox.pack()
     windowOfWidgets.append(addTrendLineCheckbox)
 
-    # Let users decide if they would like to display a TrendLine on the plot : Set by PlottingSetup.py
+    TRYOUTDATA = [data, additionalData, xAxisPlotData.get(), yAxisPlotData.get(), zAxisPlotData.get(), markerSizes.get(), sortingByLabels.get(), customTitle.get("1.0", "end-1c"), addLegendOption.get()]
 
     # Make Plots with given data
-    plotGraphButton = tk.Button(root, text="Make Plots",
-                                command=lambda: ps.MakePlots3D(data, additionalData, xAxisPlotData.get(),
-                                                               yAxisPlotData.get(), zAxisPlotData.get(),
-                                                               markerSizes.get(), sortingByLabels.get(),
-                                                               customTitle.get("1.0", "end-1c"), addLegendOption.get()))
+    plotGraphButton = tk.Button(root, text="Make Plots", command = lambda : ps.MakePlot(plottingStyle, *TRYOUTDATA))
+
     plotGraphButton.pack()
     windowOfWidgets.append(plotGraphButton)
 

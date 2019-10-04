@@ -143,8 +143,8 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, msize, sorting, CustomTitle,
 
 ########################################################################################################################
 
-def TempFunction():
-    print("HI")
-
 # Create a Dictionary to use as a switch case where the enum (of 2d or 3d) is the key and the respective plot is the value
-dictOfAppropriatePlots = {PlotDimensions.TwoDimensions : MakePlots2D, PlotDimensions.ThreeDimensions : MakePlots3D}
+dictOfAppropriatePlots = {PlotDimensions.TwoDimensions : MakePlots2D, PlotDimensions.ThreeDimensions.name : MakePlots3D}
+
+def MakePlot(plottingStyle, *args):
+    dictOfAppropriatePlots.get(plottingStyle, lambda: "Invalid Choice")(*args)
