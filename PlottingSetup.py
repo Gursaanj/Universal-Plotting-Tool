@@ -14,8 +14,7 @@ import GlobalFunctions as gf
 watermark = Image.open("CBDV_logo_linear_45.png")
 watermark.thumbnail((512,512), Image.ANTIALIAS)
 
-
-# Setting the Booleans related to the outlook of the plotting
+#Initial Booleans for Checkboxes in the Gui
 initialLegendCheck = True
 initialTrendLineCheck = False
 
@@ -28,7 +27,7 @@ class PlotDimensions(enum.Enum):
 ########################################################################################################################
 ## Creates 2d plots with the give specs
 #PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Marker Size, List of Legend Labels, Custom Title, Check for Legend, Check for Trendline
-def MakePlots2D(data, AddData, xplot, yplot, msize, sorting, CustomTitle, legendCheck, trendLineCheck):
+def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legendCheck, trendLineCheck):
     fig = plt.figure(figsize=[20, 15])
 
     ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
@@ -46,9 +45,9 @@ def MakePlots2D(data, AddData, xplot, yplot, msize, sorting, CustomTitle, legend
                     label=gf.GetLabels(data[gf.GetActualLabel(sorting, gf.sortSubstring)])[i])
 
     # Plot Additional Data as well
-    for j in range(len(AddData)):
-        plt.scatter(AddData[j][gf.GetActualLabel(xplot, gf.inputSubstring)],
-                    AddData[j][gf.GetActualLabel(yplot, gf.inputSubstring)], c='lightgray', s=msize,
+    for j in range(len(addData)):
+        plt.scatter(addData[j][gf.GetActualLabel(xplot, gf.inputSubstring)],
+                    addData[j][gf.GetActualLabel(yplot, gf.inputSubstring)], c='lightgray', s=msize,
                     label="Additional Data" if j == 0 else None)
 
     plt.title(CustomTitle if CustomTitle != "" else "{} as a function of {}".format(yplot, xplot), fontsize = 20)
@@ -98,7 +97,7 @@ def MakePlots2D(data, AddData, xplot, yplot, msize, sorting, CustomTitle, legend
 
 ## Makes 3D plots with given specs
 #PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Zazis, Marker Size, List of Legend Labels, Custom Title, Check for Legend
-def MakePlots3D(data, AddData, xplot, yplot, zplot, msize, sorting, CustomTitle, legendCheck):
+def MakePlots3D(data, addData, xplot, yplot, zplot, msize, sorting, CustomTitle, legendCheck):
     figure = plt.figure(figsize=[20, 15])
 
     ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
@@ -120,16 +119,16 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, msize, sorting, CustomTitle,
                    label=gf.GetLabels(data[gf.GetActualLabel(sorting, gf.sortSubstring)])[i])
 
     # Plot Additional Data as well
-    for j in range(len(AddData)):
-         ax.scatter(AddData[j][gf.GetActualLabel(xplot, gf.inputSubstring)],
-                    AddData[j][gf.GetActualLabel(yplot, gf.inputSubstring)],
-                    AddData[j][gf.GetActualLabel(zplot, gf.inputSubstring)], c='lightgray', s=msize,
+    for j in range(len(addData)):
+         ax.scatter(addData[j][gf.GetActualLabel(xplot, gf.inputSubstring)],
+                    addData[j][gf.GetActualLabel(yplot, gf.inputSubstring)],
+                    addData[j][gf.GetActualLabel(zplot, gf.inputSubstring)], c='lightgray', s=msize,
                     label= "Additional Data" if j == 0 else None)
 
     ax.set_title(CustomTitle if CustomTitle != "" else "{} as a function of {} and {}".format(zplot, xplot, yplot), fontsize = 20)
 
     ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
-    if initialLegendCheck:
+    if legendCheck:
         if len(gf.GetLabels(data[gf.GetActualLabel(sorting, gf.sortSubstring)])) > 5:  # 5 is Arbitrary, any better approach??
             ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), fontsize="small", title="{}".format(sorting))
         else:
@@ -144,7 +143,11 @@ def MakePlots3D(data, AddData, xplot, yplot, zplot, msize, sorting, CustomTitle,
 ########################################################################################################################
 
 # Create a Dictionary to use as a switch case where the enum (of 2d or 3d) is the key and the respective plot is the value
-dictOfAppropriatePlots = {PlotDimensions.TwoDimensions : MakePlots2D, PlotDimensions.ThreeDimensions.name : MakePlots3D}
+dictOfAppropriatePlots = {PlotDimensions.TwoDimensions.name : MakePlots2D, PlotDimensions.ThreeDimensions.name : MakePlots3D}
 
-def MakePlot(plottingStyle, *args):
-    dictOfAppropriatePlots.get(plottingStyle, lambda: "Invalid Choice")(*args)
+# Create a Function to sort through the dictionary of plotting styles, based on the choice made on the user
+def MakePlot(plottingStyle, data, addData, *arguments):
+    plottingData = [data, addData]
+    for argument in arguments:
+        plottingData.append(argument.get())
+    dictOfAppropriatePlots.get(plottingStyle, lambda: "Invalid Choice, Restart Program")(*plottingData)

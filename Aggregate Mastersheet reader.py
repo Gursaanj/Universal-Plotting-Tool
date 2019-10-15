@@ -102,6 +102,9 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     # Create a list of widgets for easier placement on the Canvas
     windowOfWidgets = []
 
+    # maintain a list of data taken from the GUI widgets and pass them to the appropriate plots
+    widgetData = []
+
     # Create Label for Xaxis plot options
     xAxisPlotLabel = tk.Label(root, text="X axis Plot", width=10)
     xAxisPlotLabel.pack()
@@ -110,6 +113,7 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     # Create Options for Xaxis in plots - Dropdown
     xAxisPlotData = tk.StringVar(root)
     xAxisPlotData.set(plottingOptions[0])
+    widgetData.append(xAxisPlotData)
 
     xAxisPlotDataOptions = tk.OptionMenu(root, xAxisPlotData, *plottingOptions)
     xAxisPlotDataOptions.pack()
@@ -123,6 +127,7 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     # Create Options for Yaxis in plots - Dropdown
     yAxisPlotData = tk.StringVar(root)
     yAxisPlotData.set(plottingOptions[0])
+    widgetData.append(yAxisPlotData)
 
     yAxisPlotDataOptions = tk.OptionMenu(root, yAxisPlotData, *plottingOptions)
     yAxisPlotDataOptions.pack()
@@ -136,6 +141,7 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     # Create Options for Zaxis in plots - Dropdown
     zAxisPlotData = tk.StringVar(root)
     zAxisPlotData.set(plottingOptions[0])
+    widgetData.append(zAxisPlotData)
 
     zAxisPlotDataOptions = tk.OptionMenu(root, zAxisPlotData, *plottingOptions)
     zAxisPlotDataOptions.pack()
@@ -149,6 +155,7 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     # Let users decide the size of the markers used in plotting
     markerSizes = tk.IntVar(root)
     markerSizes.set(gf.markerSizes[0])
+    widgetData.append(markerSizes)
 
     markerSizeOptions = tk.OptionMenu(root, markerSizes, *gf.markerSizes)
     markerSizeOptions.pack()
@@ -162,6 +169,7 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     # Let users decide how they which to sort through the aggregate data (decide what to use to determine legend in plots)
     sortingByLabels = tk.StringVar(root)
     sortingByLabels.set(sortingOptions[0])
+    widgetData.append(sortingByLabels)
 
     sortingByLabelOptions = tk.OptionMenu(root, sortingByLabels, *sortingOptions)
     sortingByLabelOptions.pack()
@@ -173,13 +181,16 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     windowOfWidgets.append(customTitleLabel)
 
     # Let users decide custom title, if not filled, using "Zplots as a function of Yplots and Xplots"
-    customTitle = tk.Text(root, heigh=1, width=50)
+    customTitle = tk.Entry(root, width = 50)
     customTitle.pack()
     windowOfWidgets.append(customTitle)
+    widgetData.append(customTitle)
 
     # Let users decide if they would like to display a legend on the plot : Set by PlottingSetup.py
     addLegendOption = tk.BooleanVar()
     addLegendOption.set(ps.initialLegendCheck)
+    widgetData.append(addLegendOption)
+
     addLegendCheckbox = tk.Checkbutton(root, text="Add Legend", variable=addLegendOption)
     addLegendCheckbox.pack()
     windowOfWidgets.append(addLegendCheckbox)
@@ -187,20 +198,22 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     # Let Users decide if they would like a trendline in their plot via a CheckBox
     addTrendLineOption = tk.BooleanVar()
     addTrendLineOption.set(ps.initialTrendLineCheck)
+    ## widgetData.append(addTrendLineOption)
+
     addTrendLineCheckbox = tk.Checkbutton(root, text = "Add Trendline", variable = addTrendLineOption)
     addTrendLineCheckbox.pack()
     windowOfWidgets.append(addTrendLineCheckbox)
 
-    TRYOUTDATA = [data, additionalData, xAxisPlotData.get(), yAxisPlotData.get(), zAxisPlotData.get(), markerSizes.get(), sortingByLabels.get(), customTitle.get("1.0", "end-1c"), addLegendOption.get()]
+    #TRYOUTDATA = [data, additionalData, xAxisPlotData.get(), yAxisPlotData.get(), zAxisPlotData.get(), markerSizes.get(), sortingByLabels.get(), customTitle.get("1.0", "end-1c"), addLegendOption.get()]
+    TRYOUTDATA = [xAxisPlotData, yAxisPlotData, zAxisPlotData, markerSizes, sortingByLabels, customTitle, addLegendOption]
 
     # Make Plots with given data
-    plotGraphButton = tk.Button(root, text="Make Plots", command = lambda : ps.MakePlot(plottingStyle, *TRYOUTDATA))
-
+    plotGraphButton = tk.Button(root, text="Make Plots", command = lambda: ps.MakePlot(plottingStyle, data, additionalData, *TRYOUTDATA))
     plotGraphButton.pack()
     windowOfWidgets.append(plotGraphButton)
 
     # End Plotting Process
-    quitApplicationButton = tk.Button(root, text="End Process", command=lambda: gf.destroywindows(listOfWindows))
+    quitApplicationButton = tk.Button(root, text="End Process", command = lambda: gf.DestroyWindows(listOfWindows))
     quitApplicationButton.pack()
     windowOfWidgets.append(quitApplicationButton)
 
@@ -312,7 +325,7 @@ def HandCraftPlot2D(plottingOptions, sortingOptions):
     window2D.append(plotGraphButton)
 
     # End Plotting Process
-    quitApplicationButton = tk.Button(root, text= "End Process", command = lambda: gf.destroywindows(listOfWindows))
+    quitApplicationButton = tk.Button(root, text= "End Process", command = lambda: gf.DestroyWindows(listOfWindows))
     quitApplicationButton.pack()
     window2D.append(quitApplicationButton)
 
@@ -430,7 +443,7 @@ def HandCraftPlo3D(PlotOptions, SortOptions):
     window3D.append(plotGraphButton)
 
     # End Plotting Process
-    quitApplicationButton = tk.Button(root, text= "End Process", command = lambda: gf.destroywindows(listOfWindows))
+    quitApplicationButton = tk.Button(root, text= "End Process", command = lambda: gf.DestroyWindows(listOfWindows))
     quitApplicationButton.pack()
     window3D.append(quitApplicationButton)
 

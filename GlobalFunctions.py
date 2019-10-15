@@ -20,28 +20,24 @@ colorStyles = ["midnightblue", "red", "darkgreen", "darkviolet", "magenta", "dar
 ########################################################################################################################
 # Gets all unique titles in a column and store it in its own list
 def GetLabels(StringArray):
-    LabelList = []
-    for i in range(len(StringArray)):
-        if StringArray[i] not in LabelList:
-            LabelList.append(StringArray[i])
-    return LabelList
-
-
+    labelList = []
+    for string in StringArray:
+        if string not in labelList:
+            labelList.append(string)
+    return labelList
 # Get the array that corresponds with the wanted label
-def GetArrays(array1, conditionarray, WhichCondition):
-    y = array1.where(conditionarray == GetLabels(conditionarray)[WhichCondition])
+def GetArrays(array1, conditionArray, WhichCondition):
+    y = array1.where(conditionArray == GetLabels(conditionArray)[WhichCondition])
     return y
 
-
 # Finds Columns headers that are meant to be used for plotting and displays them for user
-def GetUsuableColumns(array, substring):
+def GetUsuableColumns(listOfColumnHeaders, substring):
     ListOfTitles = []
-    for i in range(len(array)):
-        if substring in array[i]:
-            Label = array[i][len(substring):]
+    for i in range(len(listOfColumnHeaders)):
+        if substring in listOfColumnHeaders[i]:
+            Label = listOfColumnHeaders[i][len(substring):]
             ListOfTitles.append(Label)
     return ListOfTitles
-
 
 # Get the column label of data from the actual columns of labelist
 def GetActualLabel(truncated_label, sub_string):
@@ -49,8 +45,8 @@ def GetActualLabel(truncated_label, sub_string):
     return y
 
 # Destroy all windows attached to the run
-def destroywindows(listOfWindows):
-    for i in range(len(listOfWindows)):
-        listOfWindows[i].destroy()
+def DestroyWindows(listOfWindows):
+    for window in listOfWindows:
+        window.destroy()
 
 ########################################################################################################################
