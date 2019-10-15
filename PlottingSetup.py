@@ -127,7 +127,7 @@ def MakePlots3D(data, addData, xplot, yplot, zplot, msize, sorting, CustomTitle,
 
     ax.set_title(CustomTitle if CustomTitle != "" else "{} as a function of {} and {}".format(zplot, xplot, yplot), fontsize = 20)
 
-    ## Decide location and fontsize of labels and legend based on how many entries there are in the legend
+    # Decide location and fontsize of labels and legend based on how many entries there are in the legend
     if legendCheck:
         if len(gf.GetLabels(data[gf.GetActualLabel(sorting, gf.sortSubstring)])) > 5:  # 5 is Arbitrary, any better approach??
             ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), fontsize="small", title="{}".format(sorting))
