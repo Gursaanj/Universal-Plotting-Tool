@@ -60,14 +60,6 @@ def ChoosePlotType():
     # Get a list of all column labels used to marginalize (legend) the data
     sortOptions = gf.GetUsuableColumns(data.columns, gf.sortSubstring)
 
-    # Direct to 2D Plot Settings Page
-    plotButton2D = tk.Button(root, text = "2D Plot", command = lambda: HandCraftPlot2D(plotOptions, sortOptions))
-    plotButton2D.pack()
-
-    # Direct to 3D Plot Settings page
-    plotButton3D = tk.Button(root, text = "3D Plot", command = lambda:HandCraftPlo3D(plotOptions, sortOptions))
-    plotButton3D.pack()
-
     # A radio Button system to let the user to choose either between making a 2D or 3D plot
     # The variable assigned via the variable
     typeOfPlot = tk.StringVar()
@@ -98,7 +90,7 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
     handCraftPlotCanvas.pack()
 
     # Rebase the title of the window
-    root.title("Make your plot")
+    root.title("Plot Customization")
 
     # Create a list of widgets for easier placement on the Canvas
     windowOfWidgets = []
@@ -233,7 +225,7 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
 
     # region Plotting Button
     # Make Plots with given data
-    plotGraphButton = tk.Button(root, text="Make Plots", command = lambda: ps.MakePlot(plottingStyle, data, additionalData, *widgetData))
+    plotGraphButton = tk.Button(root, text="Make Plot", command = lambda: ps.MakePlot(plottingStyle, data, additionalData, *widgetData))
     plotGraphButton.pack()
     windowOfWidgets.append(plotGraphButton)
     # endregion
