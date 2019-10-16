@@ -18,6 +18,7 @@ watermark.thumbnail((512,512), Image.ANTIALIAS)
 #Initial Booleans for Checkboxes in the Gui
 initialLegendCheck = True
 initialTrendLineCheck = False
+initialDocumentationCheck = False
 
 # In the General plotting form, users can decide whether or not to plot 2D or 3D plots. So an Enum will be created to
 # distinguish between the two
@@ -28,7 +29,7 @@ class PlotDimensions(enum.Enum):
 ########################################################################################################################
 ## Creates 2d plots with the give specs
 #PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Marker Size, List of Legend Labels, Custom Title, Check for Legend, Check for Trendline
-def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legendCheck, trendLineCheck):
+def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legendCheck, trendLineCheck, documentationCheck):
     fig = plt.figure(figsize=[20, 15])
 
     ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
@@ -75,6 +76,10 @@ def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legend
         else:
             plt.legend(loc="best", fontsize="large", title="{}".format(sorting))
 
+    # Take information regarding the plot and place that into the word document of a given template
+    if documentationCheck:
+        DC.MakeDocument("2dPlot")
+
     # Place Labels onto the the main figure
     plt.xlabel(xplot, fontsize=18)
     plt.ylabel(yplot, fontsize=18)
@@ -98,7 +103,7 @@ def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legend
 
 ## Makes 3D plots with given specs
 #PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Zazis, Marker Size, List of Legend Labels, Custom Title, Check for Legend
-def MakePlots3D(data, addData, xplot, yplot, zplot, msize, sorting, CustomTitle, legendCheck):
+def MakePlots3D(data, addData, xplot, yplot, zplot, msize, sorting, CustomTitle, legendCheck, documentationCheck):
     figure = plt.figure(figsize=[20, 15])
 
     ## Ensure the plot is maximised right away - Might need to remove when it comes to making tool external
@@ -134,6 +139,10 @@ def MakePlots3D(data, addData, xplot, yplot, zplot, msize, sorting, CustomTitle,
             ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), fontsize="small", title="{}".format(sorting))
         else:
             ax.legend(loc="best", fontsize="large", title="{}".format(sorting))
+
+    # Take information regarding the plot and place that into the word document of a given template
+    if documentationCheck:
+        DC.MakeDocument("3dPlot")
 
     ax.set_xlabel(xplot, fontsize=18)
     ax.set_ylabel(yplot, fontsize=18)

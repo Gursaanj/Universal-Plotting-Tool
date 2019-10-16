@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9cdcbf0f-c247-471e-ab7b-53020049dfe7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/DocumentationCreator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Aggregate Mastersheet reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/Aggregate Mastersheet reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DocumentationCreator.py" beforeDir="false" afterPath="$PROJECT_DIR$/DocumentationCreator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PlottingSetup.py" beforeDir="false" afterPath="$PROJECT_DIR$/PlottingSetup.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -149,7 +150,14 @@
       <option name="presentableId" value="Default" />
       <updated>1571248553887</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Imported Documentation Creator for Python so. Initialized Document Creator made">
+      <created>1571251283261</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1571251283261</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -167,6 +175,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initialized RadioButton to Select 2D plot style at the beginning of each run" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initialized RadioButton to Select 2D plot style at the beginning of each run" />
+    <MESSAGE value="Imported Documentation Creator for Python so. Initialized Document Creator made" />
+    <option name="LAST_COMMIT_MESSAGE" value="Imported Documentation Creator for Python so. Initialized Document Creator made" />
   </component>
 </project>

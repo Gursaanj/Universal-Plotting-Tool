@@ -9,3 +9,11 @@ def MakeDocument(statement):
     firstStatement = document.add_paragraph("Does this work??")
     document.add_page_break()
     document.save("Tryout.docx")
+
+
+# Ideas to add to documentation creator:
+# Save image of plot
+# save display trendLine data
+# have the CBDV logo as a Watermark/Logo
+# Markus' signature. credibility
+# WISHLIST:: All corresponding error plot and analysis (in a simple to read table??)

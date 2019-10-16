@@ -225,6 +225,17 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
         widgetData.append(addLegendOption)
     # endregion
 
+    # region Adding Documentation Option
+    # Allow users to decide to create a document to correspond with the plot
+    addDocumentationOption = tk.BooleanVar()
+    addDocumentationOption.set(ps.initialDocumentationCheck)
+    widgetData.append(addDocumentationOption)
+
+    addDocumentationCheckbox = tk.Checkbutton(root, text = "Create Documentation", variable = addDocumentationOption)
+    addDocumentationCheckbox.pack()
+    windowOfWidgets.append(addDocumentationCheckbox)
+    # endregion
+
     # region Plotting Button
     # Make Plots with given data
     plotGraphButton = tk.Button(root, text="Make Plot", command = lambda: ps.MakePlot(plottingStyle, data, additionalData, *widgetData))
@@ -241,10 +252,10 @@ def HandCraftPlot(plottingOptions, sortingOptions, plottingStyle):
 
     # region Plotting GUI Coordinates
     # Create a list of x axs coordinates for all widgets in the window
-    plottingCanvasXCoordinates = [50, 270, 50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 335, 115, 225, 320]
+    plottingCanvasXCoordinates = [50, 270, 50, 270, 50, 270, 50, 270, 50, 270, 225, 225, 335, 115, 80, 225, 320]
 
     # Create a list of x axs coordinates for all widgets in the window
-    plottingCanvasYCoordinates = [40, 40, 80, 80, 120, 120, 160, 160, 205, 205, 235, 265, 235, 235, 290, 290]
+    plottingCanvasYCoordinates = [40, 40, 80, 80, 120, 120, 160, 160, 205, 205, 235, 265, 235, 235, 290, 290, 290]
 
     # Arrange 3D Canvas
     for i in range(len(windowOfWidgets)):
