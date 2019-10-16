@@ -8,6 +8,7 @@ from PIL import Image
 import enum
 #Import Corresponding Scripts
 import GlobalFunctions as gf
+import DocumentationCreator as DC
 
 ########################################################################################################################
 # WaterMark Image for the plot backgrounds
