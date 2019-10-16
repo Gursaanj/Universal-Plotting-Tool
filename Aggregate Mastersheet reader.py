@@ -67,6 +67,8 @@ def ChoosePlotType():
     # Selection for 2D Plot
     radioButton2DPlot = tk.Radiobutton(root, text = "2D Plot", value = ps.PlotDimensions.TwoDimensions.name, variable = typeOfPlot)
     radioButton2DPlot.pack()
+    radioButton2DPlot.select()
+
     # Selection for 3D Plot
     radioButton3DPlot = tk.Radiobutton(root, text = "3D Plot", value = ps.PlotDimensions.ThreeDimensions.name, variable = typeOfPlot)
     radioButton3DPlot.pack()
