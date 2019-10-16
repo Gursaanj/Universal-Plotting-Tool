@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from PIL import Image
 import enum
+from io import BytesIO # to save plots as params and pass to the Documentation creator
 #Import Corresponding Scripts
 import GlobalFunctions as gf
 import DocumentationCreator as DC
@@ -26,9 +27,12 @@ class PlotDimensions(enum.Enum):
     TwoDimensions = "2D"
     ThreeDimensions = "3D"
 
+# Allow the figure to be saved as bytes to be read later on
+plotAsFile = BytesIO()
+
 ########################################################################################################################
 ## Creates 2d plots with the give specs
-#PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Marker Size, List of Legend Labels, Custom Title, Check for Legend, Check for Trendline
+#PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Marker Size, List of Legend Labels, Custom Title, Check for Legend, Check for Trendline, check for Documentation
 def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legendCheck, trendLineCheck, documentationCheck):
     fig = plt.figure(figsize=[20, 15])
 
@@ -76,10 +80,6 @@ def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legend
         else:
             plt.legend(loc="best", fontsize="large", title="{}".format(sorting))
 
-    # Take information regarding the plot and place that into the word document of a given template
-    if documentationCheck:
-        DC.MakeDocument("2dPlot")
-
     # Place Labels onto the the main figure
     plt.xlabel(xplot, fontsize=18)
     plt.ylabel(yplot, fontsize=18)
@@ -99,10 +99,17 @@ def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legend
     # Plot the image with appropriate layering and desired alpha channel
     plt.figimage(watermark, xAxisOffset, yAxisOffset, zorder=1, alpha=0.05)
 
+    # save Figure in a readable format of bytes
+    plt.savefig(plotAsFile, bbox_inches='tight', pad_inches=0)
+
+    # Take information regarding the plot and place that into the word document of a given template
+    if documentationCheck:
+        DC.MakeDocument("2dPlot", plotAsFile,len(data[gf.GetActualLabel(xplot, gf.inputSubstring)]), len(trendlineXaxis))
+
     plt.show()
 
 ## Makes 3D plots with given specs
-#PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Zazis, Marker Size, List of Legend Labels, Custom Title, Check for Legend
+#PARAMS: CSV Datasheet, Additional CSV Datasheet, Xaxis, Yaxis, Zazis, Marker Size, List of Legend Labels, Custom Title, Check for Legend, check for Documentation
 def MakePlots3D(data, addData, xplot, yplot, zplot, msize, sorting, CustomTitle, legendCheck, documentationCheck):
     figure = plt.figure(figsize=[20, 15])
 
@@ -140,16 +147,18 @@ def MakePlots3D(data, addData, xplot, yplot, zplot, msize, sorting, CustomTitle,
         else:
             ax.legend(loc="best", fontsize="large", title="{}".format(sorting))
 
+    # save Figure in a readable format of bytes
+    plt.savefig(plotAsFile)
+
     # Take information regarding the plot and place that into the word document of a given template
     if documentationCheck:
-        DC.MakeDocument("3dPlot")
+        DC.MakeDocument("3dPlot", plotAsFile)
 
     ax.set_xlabel(xplot, fontsize=18)
     ax.set_ylabel(yplot, fontsize=18)
     ax.set_zlabel(zplot, fontsize=18)
 
     plt.show()
-
 ########################################################################################################################
 
 # Create a Dictionary to use as a switch case where the enum (of 2d or 3d) is the key and the respective plot is the value
