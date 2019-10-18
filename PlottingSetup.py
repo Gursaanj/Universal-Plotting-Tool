@@ -104,7 +104,7 @@ def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legend
 
     # Take information regarding the plot and place that into the word document of a given template
     if documentationCheck:
-        DC.MakeDocument("2dPlot", plotAsFile,len(data[gf.GetActualLabel(xplot, gf.inputSubstring)]), len(trendlineXaxis))
+        DC.MakeDocument("2dPlot", plotAsFile,len(data[gf.GetActualLabel(xplot, gf.inputSubstring)]))
 
     plt.show()
 
