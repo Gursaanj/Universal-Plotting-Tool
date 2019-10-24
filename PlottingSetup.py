@@ -92,7 +92,7 @@ def MakePlots2D(data, addData, xplot, yplot, msize, sorting, CustomTitle, legend
     axesWidth = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).width * fig.dpi
     axesHeight = fig.get_axes()[0].get_window_extent().transformed(fig.dpi_scale_trans.inverted()).height * fig.dpi
 
-    # The offset for the watermark, for it to be place in the centre of the plot, regardless of the plot data
+    # The offset for the watermark, for it to be placed in the centre of the plot, regardless of the plot data
     xAxisOffset = (axesWidth / 2) + ((figureWidth - axesWidth) / 2) - watermark.size[0] / 2
     yAxisOffset = (axesHeight / 3) + ((figureHeight - axesHeight) / 3) - watermark.size[1] / 2
 
@@ -152,7 +152,7 @@ def MakePlots3D(data, addData, xplot, yplot, zplot, msize, sorting, CustomTitle,
 
     # Take information regarding the plot and place that into the word document of a given template
     if documentationCheck:
-        DC.MakeDocument("3dPlot", plotAsFile)
+        DC.MakeDocument("3dPlot", plotAsFile, len(data[gf.GetActualLabel(xplot, gf.inputSubstring)]))
 
     ax.set_xlabel(xplot, fontsize=18)
     ax.set_ylabel(yplot, fontsize=18)
